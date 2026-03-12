@@ -1,8 +1,9 @@
+
 {
-  "name": "AvChecklist",
-  "short_name": "AvChecklist",
-  "description": "App for Aviation Checklists",
-  "start_url": "/",
+  "name": "Flight Checklist",
+  "short_name": "Checklist",
+  "description": "Aviation checklist app for Paris Flight Academy and Aéro Club Paul Tissandier — bilingual EN/FR.",
+  "start_url": "https://4uk0.github.io/AvChecklist/",
   "display": "standalone",
   "background_color": "#0a0e14",
   "theme_color": "#0a0e14",
@@ -18,9 +19,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "categories": [
-    "utilities"
-  ],
-  "id": "AvCheck"
+  ]
 }
