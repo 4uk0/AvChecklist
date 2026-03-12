@@ -16,7 +16,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'Courier New',Courier,monospace;background:#0a0e14;color:#c8d6e5;min-height:100vh;overflow-x:hidden;}
+    body{font-family:'Courier New',Courier,monospace;background:#0a0e14;color:#c8d6e5;min-height:100vh;overflow-x:hidden;text-transform:uppercase;letter-spacing:0.04em;}
+    /* Reset uppercase for input fields */
+    input,textarea{text-transform:none;letter-spacing:normal;}
     ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:#0a0e14;} ::-webkit-scrollbar-thumb{background:#1e2a3a;}
     @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
@@ -110,172 +112,170 @@ const PHASE_COLORS = {
   "AFTER LANDING":"#80CBC4","APRÈS ATTERRISSAGE":"#80CBC4",
   "RUNWAY VACATED":"#80CBC4","PISTE DÉGAGÉE":"#80CBC4",
   "RETURN TO HOLDING POINT":"#FFF176","RETOUR POINT D'ARRÊT":"#FFF176",
-  "SHUTDOWN":"#78909C","ARRÊT MOTEUR":"#78909C",
+  "SHUTDOWN":"#78909C","ARRÊT MOTEUR":"#78909C","ENGINE STOP":"#78909C",
   "EMERGENCIES":"#FF1744","URGENCES":"#FF1744",
 };
 const phaseColor = (p)=>PHASE_COLORS[p]||"#4FC3F7";
 
 // ── CHECKLIST DATA ─────────────────────────────────────────────────────────
 const HR200_EN = {
-  "PRE-FLIGHT (INSIDE)":["Magneto – OFF","Master switch – ON","Fuel gauge – CHECK","Fuel selector – FULLEST TANK","Flaps – EXTENDED & CHECKED","Altimeter – SET","DI – SET","Radios/avionics – OFF","Master switch – OFF"],
-  "PRE-FLIGHT (OUTSIDE)":["Pitot – UNOBSTRUCTED","Left main landing gear (fairing & tyre) – CHECKED","Left wing leading edge – CHECKED","Fuel cap – SECURE","Fuel – CHECKED (color/contamination)","Left aileron – CHECKED","Tail – CHECKED (control surfaces, hinge pins)","Right aileron – CHECKED","Fuel cap – SECURE","Fuel – CHECKED","Right wing leading edge – CHECKED","Right main landing gear (fairing & tyre) – CHECKED","Engine cowling – SECURE","Oil level – CHECKED (min 4qt, max 6qt)","Propeller – CHECKED (nicks, cracks)","Air filter – CLEAR","Nose wheel – CHECKED"],
-  "BEFORE START":["Brakes – TESTED & SET","Seats & harness – ADJUSTED & LOCKED","Fuel selector – FULLEST TANK","Mixture – RICH","Throttle – CLOSED","Carb heat – COLD","Avionics – OFF","Beacon – ON","Master switch – ON","Primer – 2-3 strokes (cold engine), LOCKED"],
-  "ENGINE START":["Area – CLEAR (call 'CLEAR PROP')","Magnetos – BOTH","Throttle – OPEN ½ inch","Start – ENGAGE until engine fires","Throttle – 1000 RPM","Oil pressure – CHECK within 30s","Avionics – ON"],
-  "AFTER START":["Brakes – RELEASE","Flaps – RETRACT","Instruments – CHECK & SET","Altimeter – QNH SET","DI – ALIGN with compass","Radio – TUNED (ATIS/INFO)","Transponder – ALT"],
-  "TAXI":["Flight controls – FREE & CORRECT","Brake check – APPLY gently","DI – CHECK against compass turns","Taxi speed – APPROPRIATE","Lookout – CONTINUOUS"],
-  "ENGINE RUN-UP":["Parking brake – SET","Throttle – 1800 RPM","Magneto check – L, R, BOTH (max 125 RPM drop, max 50 RPM difference)","Carb heat – ON (note drop), COLD","Oil temperature – GREEN","Oil pressure – GREEN","Suction – 4.6-5.4 in Hg","Instruments – SET & CHECKED","Throttle – 1000 RPM idle"],
-  "BEFORE TAKEOFF":["Radio – TUNED & SQUAWK SET","Trim – SET for takeoff","Flaps – AS REQUIRED","Mixture – RICH (below 3000ft)","Fuel selector – FULLEST TANK","Carb heat – COLD","Controls – FREE & CORRECT","Doors & windows – CLOSED & LOCKED","⚠ Emergency brief: runway ahead if engine fails"],
-  "TAKEOFF":["Full power – CHECK (RPM, T, P gauges)","Airspeed alive – CHECK","Rotate at 60-65 kt (Vr)","Climb at 75-80 kt","Positive climb – FLAPS UP"],
-  "CLIMB (300ft AGL)":["Carb heat – CHECK (then COLD)","Trim – ADJUST for climb speed","Radio – CONTACT (Departure/Area)","Transponder – ALT"],
-  "DESCENT":["ATIS/QNH – OBTAIN","Altimeter – SET QNH","Carb heat – AS REQUIRED","Fuel selector – FULLEST TANK","Mixture – ADJUST for altitude","Lookout – ENHANCED"],
-  "DOWNWIND":["Undercarriage – DOWN (fixed – check visually)","Brakes – PRESSURE CHECK","Mixture – RICH","Fuel selector – FULLEST TANK","Carb heat – ON","Flaps – 10° EXTENDED & CHECKED (IAS in white band)","Instruments – CHECK","Radio – REPORT DOWNWIND"],
-  "BASE LEG":["Flaps – 20°-30° AS REQUIRED","Speed – 80 kt","Radio – REPORT BASE if required","Lookout – CLEAR final"],
-  "FINAL":["Flaps – FULL 40° (or as required)","Speed – 70-75 kt (Vref)","Trim – ADJUST","⚠ Engine failure on final: LAND AHEAD","Carb heat – COLD before touchdown","Lookout – RUNWAY CLEAR"],
-  "RUNWAY VACATED":["Carb heat – COLD","Flaps – RETRACT","Transponder – STBY","Radio – REPORT clear"],
-  "SHUTDOWN":["Parking brake – SET","Avionics – OFF","Throttle – 1000 RPM / 2 mins","Mixture – CUT OFF (lean to stop)","Magnetos – OFF","Master switch – OFF","Control lock – INSTALL"],
-  "EMERGENCIES":["⚠ ENGINE FAILURE IN FLIGHT: Best glide 75kt, suitable field, attempt restart","⚠ ENGINE FAILURE T/O <500ft: LAND AHEAD – do not turn back","⚠ FIRE ON GROUND: Mixture CUTOFF, Master OFF, abandon aircraft","⚠ ELECTRICAL FIRE: Master OFF, avionics OFF, land ASAP","⚠ CARB ICE: Carb heat FULL ON until RPM rises, then COLD","⚠ OIL PRESSURE LOW: Reduce power, land ASAP","⚠ LOST COMMS: Squawk 7600, follow light signals"]
+  "PRE-FLIGHT (INSIDE)":["3 red covers – IN COCKPIT","Documents – ONBOARD","Fuel planning & mass/balance – CHECKED","Baggage – FASTENED","ELT – ONBOARD","Fireproof glove and bag – ONBOARD","Flight controls – TESTED","Propeller area – CLEAR","Battery – ON","Circuit breakers – IN","Fuel gauge – CHECKED","Fuel pump – ON","Fuel pressure – CHECKED","Fuel pump – OFF","Flaps – TESTED, EXTENDED & CHECKED","Landing lights & Nav lights – CHECKED (ON then OFF)","Stall warning horn – CHECKED","Battery – OFF","Windscreen canopy – CLEAN"],
+  "PRE-FLIGHT (OUTSIDE)":["Fuel cap – CLOSED & LOCKED","Fuel vent – CHECKED","Fuel purge (1st flight of day) – DONE","Propeller cone – STATE CHECKED","Propeller – STATE CHECKED","Air inlet – IN PLACE & CHECKED","Cowling fasteners (left) – IN PLACE & GOOD CONDITION","Oil level (cold engine) – BETWEEN 4 AND 6","Left fuselage – STATE CHECKED","Left static – UNOBSTRUCTED","Left main landing gear (fairing & tyre) – STATE CHECKED","Left wing upper/lower surface – STATE CHECKED","Flap and housing – STATE CHECKED","Flap slack – NON SIGNIFICANT","Aileron, deflection and hinges – CHECKED","Left ground wire – IN PLACE","Left access hatch – CLOSED","Left leading edge – STATE CHECKED","Left wing tip, Nav light – GOOD CONDITION","Pitot – UNOBSTRUCTED","Alternator belt – TENSION CHECKED","Exhaust pipes – STATE CHECKED","Nose wheel (fairing & tyre) – STATE CHECKED","Cowling fasteners (right) – IN PLACE & GOOD CONDITION","Right wing upper/lower surface – STATE CHECKED","Right leading edge – STATE CHECKED","Right access hatch – CLOSED","Aileron, deflection and hinges – CHECKED","Flap and housing – STATE CHECKED","Flap slack – NON SIGNIFICANT","Right wing tip, Nav light – GOOD CONDITION","Right ground wire – IN PLACE","Right main landing gear (fairing & tyre) – STATE CHECKED","Right static – UNOBSTRUCTED","Antennas – IN PLACE & GOOD CONDITION","Horizontal stabilizer & clearance (left) – GOOD CONDITION","Hinges, bolts and brake cables (left & right) – IN PLACE & GOOD CONDITION","Rudder – IN PLACE & CHECKED","Horizontal stabilizer & clearance (right) – GOOD CONDITION","Right fuselage – STATE CHECKED"],
+  "BEFORE START":["3 red covers – IN COCKPIT","Propeller area – CLEARED","ELT – WITHIN REACH","Seats – ADJUSTED","Headset – REMOVED","Belts – UNFASTENED","Park brake – SET","Hour meter – NOTED","Air vent and heating – CLOSED","All electrical loads – OFF","Strobe – ON","Fuel Shutoff – COVERED","Battery – ON","Mixture – FULL RICH","Keys – SET","Fuel pump – ON","Carburator heat – OFF","if OAT<15°C add 1 injection","Throttle – 1 INCH IN","Injections with throttle: 2 if warm / 7 if cold engine"],
+  "ENGINE START":["NOBODY AHEAD – HAND ON THROTTLE – TOES ON BRAKE","START – Oil pressure green within 10 seconds","Engine speed – 1200 RPM","IF FLOODED: Fuel pump OFF / Mixture FULL POOR / Throttle FULL FORWARD","When engine fires: Mixture FULL RICH + throttle to 1200 RPM"],
+  "AFTER START":["Alternator – ON","Electrical load – CHECKED","Fuel pump – OFF","Fuel pressure – CHECKED","Master radio – ON","Headset – PLUGGED","Belts – FASTENED","Flaps – RETRACTED & CHECKED","Transponder – GND 7000","ATIS (if available) – LISTENED","Useful frequencies – DISPLAYED","Altimeter – SET TO QNH","Barometric error – NOTED","Directional gyro – SET","Tracker and Action Cam (if used) – SET","Taxi briefing with VAC chart","Navigation light – ON","Landing light – ON","BLOC OFF TIME – NOTED"],
+  "TAXI":["Compass and directional gyro – CHECKED","Turn and bank indicators – CHECKED","Altimeter and artificial horizon – STABLE"],
+  "ENGINE RUN-UP":["Parking brake – SET","Landing light – OFF","Engine instruments – CHECKED GREEN","Power – 1800 RPM","Gyro suction – CHECKED GREEN","Fuel pump – OFF","MAGNETOS CHECK: -175 RPM max each / max gap 50 RPM between them","CARBURATOR HEAT TEST (5 sec): loss 20 to 200 RPM","IDLE CHECK: 600-650 RPM and stable","Power – 1200 RPM","Transponder – 7000","Landing light – ON"],
+  "BEFORE TAKEOFF":["Flight controls – FREE","Magnetos – BOTH","Mixture – FULL RICH","Carburator heat – OFF","Flaps – 10° CHECKED","Trim – TAKEOFF POSITION","Fuel pump – ON","Alarm lights – TESTED","Power – 1200 RPM","Transponder – CODE VERIFIED / ALT","Harness belts – FASTENED","Canopy – LOCKED","Landing light – ON","Strobe – ON","BEFORE TAKE-OFF BRIEFING (DEPARTURE AND SAFETY)","BLOC ON TIME – NOTED"],
+  "TAKEOFF":["After lining up: DG reset on QFU / Altimeter at QNH / Engine instruments checked / Transponder ALT / Battery+Alternator+Pump ON / Carb heat OFF","Throttle >= 2250 RPM – Power set","No alarm – Continue","Vi Rotate – 55 kt","Vi Max slope flaps 10° – 62 kt","Vi Flaps 10° climb – 73 kt","Vi Flaps UP climb – 76 kt"],
+  "CLIMB (300ft AGL)":["Flaps – RETRACTED CHECKED","Fuel Pump – OFF","Carburator Heat – OFF","Engine Instruments – CHECKED"],
+  "DESCENT":["Mixture – FULL RICH","Fuel – CHECKED","Gyro – RESET","Carburator Heat – ON then OFF"],
+  "DOWNWIND":["Power – 2300 RPM","Speed – 80 kt","Landing light – ON","Flaps (IAS in white band) – 10° EXTENDED CHECKED"],
+  "BASE LEG":["Power – 1700 RPM","Vz – -500 ft/min","Vi – 82 kt","Fuel Pump – OFF","Carburator Heat – OFF","Engine Instruments – CHECKED"],
+  "FINAL":["Flaps – 20° EXTENDED CHECKED","Vi – 68 kt","Fuel pump – ON","Carburator heat – OFF"],
+  "RUNWAY VACATED":["Flaps – RETRACTED VERIFIED","Fuel pump – OFF","Carburator heat – OFF"],
+  "ENGINE STOP":["Parking brake – SET","Landing light – OFF","Navigation light – OFF","Transponder – 7000 then OFF","Directional gyro – SET","Master Radio – OFF","Alternator – OFF","Power – AT IDLE","Magnetos check – DONE","Mixture – FULL POOR","Keys – OUT","Battery – OFF","Hour meter – NOTED","Tracker and Action Cam (if used) – STOPPED"]
 };
 
 const HR200_FR = {
-  "PRÉVOL (INTÉRIEUR)":["Magnétos – COUPÉES","Masse – EN SERVICE","Jauge carburant – VÉRIFIÉE","Sélecteur carburant – RÉSERVOIR LE PLUS PLEIN","Volets – SORTIS & VÉRIFIÉS","Altimètre – CALÉ","DI – ALIGNÉ","Radios/avionique – COUPÉES","Masse – HORS SERVICE"],
-  "PRÉVOL (EXTÉRIEUR)":["Tube de Pitot – LIBRE","Atterrisseur gauche (carénage & pneumatique) – VÉRIFIÉ","Bord d\'attaque aile gauche – VÉRIFIÉ","Bouchon carburant – SERRÉ","Carburant – VÉRIFIÉ (couleur/contamination)","Aileron gauche – VÉRIFIÉ","Empennage – VÉRIFIÉ (gouvernes, axes de charnière)","Aileron droit – VÉRIFIÉ","Bouchon carburant – SERRÉ","Carburant – VÉRIFIÉ","Bord d\'attaque aile droite – VÉRIFIÉ","Atterrisseur droit (carénage & pneumatique) – VÉRIFIÉ","Capot moteur – FERMÉ","Niveau huile – VÉRIFIÉ (min 4qt, max 6qt)","Hélice – VÉRIFIÉE (entailles, fissures)","Filtre à air – DÉGAGÉ","Roue avant – VÉRIFIÉE"],
-  "AVANT MISE EN ROUTE":["Freins – TESTÉS & SERRÉS","Sièges & harnais – RÉGLÉS & VERROUILLÉS","Sélecteur carburant – RÉSERVOIR LE PLUS PLEIN","Richesse – PLEIN RICHE","Gaz – FERMÉS","Réchauffage carburateur – FROID","Avionique – HORS SERVICE","Feu anticollision – EN SERVICE","Masse – EN SERVICE","Primer – 2-3 coups (moteur froid), VERROUILLÉ"],
-  "MISE EN ROUTE":["Zone – LIBRE (annoncer 'HÉLICE')","Magnétos – LES DEUX","Gaz – OUVERTS ½ pouce","Démarreur – ENCLENCHÉ jusqu\'au démarrage","Gaz – 1000 tr/min","Pression huile – VÉRIFIÉE sous 30s","Avionique – EN SERVICE"],
-  "APRÈS MISE EN ROUTE":["Freins – DESSERRÉS","Volets – RENTRÉS","Instruments – VÉRIFIÉS & RÉGLÉS","Altimètre – QNH CALÉ","DI – ALIGNÉ sur le compas","Radio – RÉGLÉE (ATIS/INFO)","Transpondeur – ALT"],
-  "ROULAGE":["Commandes de vol – LIBRES & CORRECTES","Vérification freins – APPUI LÉGER","DI – VÉRIFIÉ en virage","Vitesse roulage – APPROPRIÉE","Guet – CONTINU"],
-  "POINT FIXE":["Frein de parc – SERRÉ","Gaz – 1800 tr/min","Vérif magnétos – G, D, LES DEUX (chute max 125 tr/min, diff max 50)","Réchauffage carbu – EN SERVICE (noter chute), FROID","Température huile – VERTE","Pression huile – VERTE","Dépression – 4.6-5.4 in Hg","Instruments – RÉGLÉS & VÉRIFIÉS","Gaz – 1000 tr/min ralenti"],
-  "AVANT DÉCOLLAGE":["Radio – RÉGLÉE & TRANSPONDEUR RÉGLÉ","Trim – RÉGLÉ décollage","Volets – SELON BESOIN","Richesse – PLEIN RICHE (< 3000ft)","Sélecteur carburant – RÉSERVOIR LE PLUS PLEIN","Réchauffage carbu – FROID","Commandes – LIBRES & CORRECTES","Portes & hublots – FERMÉS & VERROUILLÉS","⚠ Bref urgence: piste devant si panne moteur"],
-  "DÉCOLLAGE":["Plein gaz – VÉRIFIÉ (tr/min, T, P)","Vitesse indiquée – VIVE","Rotation à 60-65 kt (Vr)","Montée à 75-80 kt","Montée positive – VOLETS RENTRÉS"],
-  "MONTÉE (300ft AGL)":["Réchauffage carbu – VÉRIFIÉ (puis FROID)","Trim – AJUSTÉ vitesse de montée","Radio – CONTACT (Départ/Zone)","Transpondeur – ALT"],
-  "DESCENTE":["ATIS/QNH – OBTENU","Altimètre – CALÉ QNH","Réchauffage carbu – SELON BESOIN","Sélecteur carburant – RÉSERVOIR LE PLUS PLEIN","Richesse – AJUSTÉE altitude","Guet – RENFORCÉ"],
-  "VENT ARRIÈRE":["Atterrisseur – SORTI (fixe – vérif visuelle)","Freins – VÉRIFICATION PRESSION","Richesse – PLEIN RICHE","Sélecteur carburant – RÉSERVOIR LE PLUS PLEIN","Réchauffage carbu – EN SERVICE","Volets – 10° SORTIS & VÉRIFIÉS (VI en arc blanc)","Instruments – VÉRIFIÉS","Radio – COMPTE RENDU VENT ARRIÈRE"],
-  "ÉTAPE DE BASE":["Volets – 20°-30° SELON BESOIN","Vitesse – 80 kt","Radio – COMPTE RENDU BASE si requis","Guet – FINALE DÉGAGÉE"],
-  "FINALE":["Volets – COMPLETS 40° (ou selon besoin)","Vitesse – 70-75 kt (Vref)","Trim – AJUSTÉ","⚠ Panne moteur en finale: ATTERRIR DEVANT","Réchauffage carbu – FROID avant toucher","Guet – PISTE LIBRE"],
-  "PISTE DÉGAGÉE":["Réchauffage carbu – FROID","Volets – RENTRÉS","Transpondeur – VEILLE","Radio – COMPTE RENDU piste dégagée"],
-  "ARRÊT MOTEUR":["Frein de parc – SERRÉ","Avionique – HORS SERVICE","Gaz – 1000 tr/min / 2 min","Richesse – COUPÉE (appauvrissement pour arrêt)","Magnétos – COUPÉES","Masse – HORS SERVICE","Commandes – BLOQUÉES"],
-  "URGENCES":["⚠ PANNE MOTEUR EN VOL: Finesse max 75kt, champ adapté, tentative redémarrage","⚠ PANNE MOTEUR DÉC. <500ft: ATTERRIR DEVANT – ne pas faire demi-tour","⚠ FEU AU SOL: Richesse COUPÉE, Masse COUPÉE, évacuer","⚠ FEU ÉLECTRIQUE: Masse COUPÉE, avionique COUPÉE, atterrir ASAP","⚠ GIVRAGE CARBU: Réchauffage PLEIN jusqu\'à remontée tr/min, puis FROID","⚠ PRESSION HUILE BASSE: Réduire puissance, atterrir ASAP","⚠ PERTE RADIO: Transpondeur 7600, suivre signaux lumineux"]
+  "PRÉVOL (INTÉRIEUR)":["3 flammes – DANS L'HABITACLE","Documents – À BORD","Bilan carburant & masse centrage – VÉRIFIÉS","Bagages – ARRIMÉS","Balise de détresse (ELT) – À BORD","Extincteur – PRÉSENT ET FIXÉ","Gant et sac ignifugés – À BORD","Commandes de vol – ESSAYÉES","Champ d'hélice – DÉGAGÉ","Batterie – ON","Disjoncteurs – ENCLENCHÉS","Jauge carburant – VÉRIFIÉE","Pompe carburant – ON","Pression carburant – VÉRIFIÉE","Pompe carburant – OFF","Volets – TESTÉS, SORTIS ET VÉRIFIÉS","Phare et Feux – ON puis vérifiés puis OFF","Avertisseur de décrochage – VÉRIFIÉ","Batterie – OFF","Verrière – PROPRE"],
+  "PRÉVOL (EXTÉRIEUR)":["Bouchon essence – FERMÉ ET VERROUILLÉ","Mise à l'air libre bouchon réservoir – VÉRIFIÉE","Purge carburant (1er vol) – EFFECTUÉE","Fuselage gauche – ÉTAT VÉRIFIÉ","Prise statique gauche – NON OBSTRUÉE","Antennes – PRÉSENTES ET BON ÉTAT","Gouverne de profondeur gauche et débattement – BONS ÉTAT","Charnières, écrous et fils de frein – PRÉSENTS ET VÉRIFIÉS","Dérive verticale – PRÉSENTE ET VÉRIFIÉE","Fil de masse – PRÉSENT ET INTÈGRE","Fixations capot – PRÉSENTES ET VÉRIFIÉES","Niveau d'huile (moteur froid) – ENTRE 4 ET 6","Cône hélice – ÉTAT VÉRIFIÉ","Hélice – ÉTAT VÉRIFIÉ","Gouverne de profondeur droite et débattement – BON ÉTAT","Fuselage droit – ÉTAT VÉRIFIÉ","Tube de pitot – NON OBSTRUÉ","Train principal gauche (carénage et pneu) – ÉTAT VÉRIFIÉ","Volet et logement – ÉTAT VÉRIFIÉ","Bord d'attaque – ÉTAT VÉRIFIÉ","Jeu du volet – NON SIGNIFICATIF","Saumon, feu de nav – BON ÉTAT","Aileron, débattement et attache – VÉRIFIÉS","Aile gauche intrados extrados – ÉTAT VÉRIFIÉ","Fil de masse – PRÉSENT ET INTÈGRE","Trappe de visite – FERMÉE","Entrées d'air – NON OBSTRUÉES","Courroie de l'alternateur – TENSION VÉRIFIÉE","Pipes d'échappement – ÉTAT VÉRIFIÉ","Train avant (carénage et pneu) – ÉTAT VÉRIFIÉ","Fixations capot droites – PRÉSENTES ET VÉRIFIÉES","Aile droite intrados extrados – ÉTAT VÉRIFIÉ","Aileron, débattement et attache – VÉRIFIÉS","Trappe de visite – FERMÉE","Volet et logement – ÉTAT VÉRIFIÉ","Bord d'attaque – ÉTAT VÉRIFIÉ","Jeu du volet – NON SIGNIFICATIF","Train principal droit (carénage et pneu) – ÉTAT VÉRIFIÉ","Prise statique droite – NON OBSTRUÉE","Saumon, feu de nav – BON ÉTAT","Fil de masse – PRÉSENT ET INTÈGRE"],
+  "AVANT MISE EN ROUTE":["3 flammes – DANS L'HABITACLE","Balise de détresse – À PORTÉE DE MAIN","Sièges – RÉGLÉS","Casques – RETIRÉS","Ceintures – NON ATTACHÉES","Verrière – MI-COURSE","Champ d'hélice – DÉGAGÉ","Batterie – ON","Mixture – PLEIN RICHE","Clé – EN PLACE","Pompe carburant – ON","Injections à la manette: 1 si moteur chaud / 3 si moteur froid","Si OAT<15°C rajouter 1 injection","Manette des gaz – 1 POUCE","Frein de parc – SERRÉ","Compteur d'heures – NOTÉ","Aérateurs et chauffage – FERMÉS","Toutes servitudes électriques – OFF","Strobe – ON","Fuel Shutoff – PROTÉGÉ","Réchauffe carburateur – OFF"],
+  "MISE EN ROUTE":["PERSONNE DEVANT – MAIN SUR MANETTE – PIEDS SUR FREINS","DÉMARRAGE – Pression d'huile dans le vert après 10 secondes","Régime – 1200 tr/min","SI MOTEUR NOYÉ: Pompe OFF / Mixture plein pauvre / Pleins gaz","Dès que le moteur tousse: Mixture plein riche + réduction vers 1200 tr/min"],
+  "APRÈS MISE EN ROUTE":["Alternateur – ON","Charge électrique – VÉRIFIÉE","Pompe carburant – OFF","Pression carburant – VÉRIFIÉE","Casques – BRANCHÉS","Ceintures – ATTACHÉES","Volets – RENTRÉS ET VÉRIFIÉS","Radio et GPS – ON VOLUME RÉGLÉ","Transpondeur – 7000","ATIS (si disponible) – ÉCOUTÉ","Fréquences utiles – AFFICHÉES","Altimètre – RÉGLÉ AU QNH","Erreur barométrique – NOTÉE","Directionnel – RECALÉ","Tracker et Action Cam (si utilisé) – EN MARCHE","Briefing roulage avec carte VAC","Feux de navigation – ON","Phare d'atterrissage – ON","BLOC OFF – NOTÉ"],
+  "ROULAGE":["Compas et directionnel – VÉRIFIÉS","Indicateur de virage, bille – VÉRIFIÉS","Altimètre et horizon artificiel – STABLES"],
+  "POINT FIXE":["Frein de parc – SERRÉ","Phare d'atterrissage – OFF","Instruments moteur – VÉRIFIÉS VERTS","Régime – 1800 tr/min","Dépression gyro – VÉRIFIÉE VERT","Pompe carburant – OFF","ESSAI MAGNETOS: -175 tr/min maxi sur chaque / Écart maxi 50 tr/min","ESSAI RÉCHAUFFE CARBURATEUR (5 sec): chute 20 à 200 tr/min","ESSAI RALENTI: 600-650 tr/min et stable","Régime – 1200 tr/min","Transpondeur – 7000","Phare d'atterrissage – ON"],
+  "AVANT DÉCOLLAGE":["Commandes – LIBRES","Magnétos – BOTH","Mixture – PLEIN RICHE","Réchauffe carburateur – OFF","Volets – 10° VÉRIFIÉS","Compensateur – DÉCOLLAGE","Pompe carburant – ON","Lampes témoins – TESTÉES","Régime – 1200 tr/min","Transpondeur – CODE VÉRIFIÉ / ALT","Harnais pilote et pax – ATTACHÉS","Verrière – VERROUILLÉE","Phare d'atterrissage – ON","Strobe – ON","BRIEFING AVANT DÉCOLLAGE (DÉPART ET SÉCURITÉ)","BLOC ON – NOTÉ"],
+  "DÉCOLLAGE":["Après alignement: Directionnel recalé QFU / Altimètre QNH / Instruments moteur vérifiés / Transpondeur ALT / Batterie+Alternateur+Pompe ON / Réchauffe carbu OFF","Régime >= 2250 tr/min – Je poursuis","Pas d'alarme – Continuer","Vi Rotation – 55 kt","Vi pente max volets 10° – 62 kt","Vi montée volets 10° – 73 kt","Vi montée en lisse – 76 kt"],
+  "MONTÉE (300ft AGL)":["Volets – RENTRÉS VÉRIFIÉS","Pompe carburant – OFF","Réchauffe carburateur – OFF","Instruments moteur – VÉRIFIÉS"],
+  "DESCENTE":["Mixture – PLEIN RICHE","Essence – VÉRIFIÉE","Gyro – RECALÉ","Réchauffe carburateur – ON puis OFF"],
+  "VENT ARRIÈRE":["Régime – 2300 tr/min","Vitesse – 80 kt","Phare d'atterrissage – ON","Volets (Vi dans l'arc blanc) – 10° SORTIS VÉRIFIÉS"],
+  "ÉTAPE DE BASE":["Régime – 1700 tr/min","Vz – -500 ft/min","Vi – 82 kt","Pompe carburant – OFF","Réchauffe carburateur – OFF","Instruments moteur – VÉRIFIÉS"],
+  "FINALE":["Volets – 20° SORTIS VÉRIFIÉS","Vi – 68 kt","Pompe carburant – ON","Réchauffe carburateur – OFF"],
+  "PISTE DÉGAGÉE":["Volets – RENTRÉS VÉRIFIÉS","Pompe carburant – OFF","Réchauffe carburateur – OFF"],
+  "ARRÊT MOTEUR":["Frein de parc – SERRÉ","Phare d'atterrissage – OFF","Feu de navigation – OFF","Transpondeur – 7000 puis OFF","Directionnel – RÉGLÉ","Radio – OFF","Alternateur – OFF","Régime – AU RALENTI","Essai coupure magnétos – EFFECTUÉ","Mixture – PLEIN PAUVRE","Clé – ENLEVÉE","Batterie – OFF","Compteur d'heures – NOTÉ","Tracker et Action Cam (si utilisés) – ARRÊTÉS"]
 };
 
+
+
 const HR200_GENERIC_EN = {
-  "PRE-FLIGHT":["Documents – ONBOARD (license, medical, logbook)","Weather briefing – COMPLETED","NOTAMs – CHECKED","Fuel – CHECKED (quantity, color, no contamination)","Oil – CHECKED (level, no leaks)","Control surfaces – FREE & CORRECT","Pitot – UNOBSTRUCTED","Tires – INFLATED & UNDAMAGED","Chocks – REMOVED"],
-  "BEFORE START":["Seats & harness – SET","Brakes – TESTED & SET","Fuel selector – ON (fullest tank)","Mixture – RICH","Throttle – CLOSED","Carb heat – COLD","Master – ON","Beacon – ON"],
-  "ENGINE START":["CLEAR PROP – CALLED","Magnetos – BOTH","Throttle – CRACKED","Starter – ENGAGE","Oil pressure – CHECK (30s)","RPM – STABILIZE at 1000"],
-  "AFTER START":["Flaps – RETRACT","Instruments – CHECK","Altimeter – QNH SET","DI – ALIGN","Radio – ON (ATIS/INFO)","Transponder – ALT"],
-  "TAXI":["Flight controls – FREE & CORRECT","Brakes – TEST","DI – CHECK vs compass","Taxi speed – CONTROLLED"],
-  "ENGINE RUN-UP":["Parking brake – SET","1800 RPM","Magneto check – L, R, BOTH (max drop 125 RPM)","Carb heat – ON then COLD","All gauges – GREEN","1000 RPM idle"],
-  "BEFORE TAKEOFF":["Trim – TAKEOFF","Flaps – SET","Mixture – RICH","Transponder – ALT","Doors – LOCKED","Runway – CLEAR","⚠ Emergency: land ahead if engine fails on takeoff"],
-  "AFTER TAKEOFF":["Flaps – RETRACT","Power – SET climb","Carb heat – CHECK"],
-  "APPROACH":["ATIS – OBTAINED","Altimeter – QNH","Mixture – RICH","Carb heat – ON","Fuel – FULLEST TANK","Flaps – AS REQUIRED"],
-  "BEFORE LANDING":["Flaps – FULL","Speed – Vref","Mixture – RICH","⚠ Go-around: full power, flaps 20°, positive climb"],
-  "AFTER LANDING":["Carb heat – COLD","Flaps – RETRACT","Transponder – STBY"],
-  "RETURN TO HOLDING POINT":["Transponder – STBY","Radio – REPORT vacated","Parking brake – AS REQUIRED"],
-  "SHUTDOWN":["Parking brake – SET","Avionics – OFF","Throttle – IDLE (2 min)","Mixture – CUT OFF","Magnetos – OFF","Master – OFF","Control lock – INSTALL"]
+  "PRE-FLIGHT":["Fuel strainer – DRAINED (1st flight of day)","Tow bar – REMOVED","Canopy – CLEAN","Battery – ON","Lights & landing light – CHECKED","Stall warning – CHECKED","Electric fuel pump – CHECKED","Fuel quantity – CHECKED","Battery – OFF","Oil – BETWEEN 5 AND 6","Red covers (x3) – REMOVED","External pre-flight – COMPLETED","Documents (aircraft & pilot) – ONBOARD","Handheld mic – ONBOARD","Fuel cutoff – PUSHED IN (kept)","Hobbs meter – NOTED (departure)","Seats – ADJUSTED & LOCKED","Harnesses – SECURED","Canopy – PULLED, NOT LOCKED"],
+  "BEFORE START":["Parking brake – SET","Electrical services – OFF","Carb heat – COLD","Mixture – FULL RICH","Battery – ON","Beacon – ON","Flaps – RETRACTED","Magnetos – KEYS IN / OFF"],
+  "ENGINE START":["Carb heat – AS REQUIRED (cold conditions)","Headsets – CLEAR OF PROP","Electric pump – ON","Magnetos – BOTH","COLD ENGINE – Prime: 3 strokes","WARM ENGINE – Prime: 0 strokes","Throttle – ½ cm open","CLEAR PROP – ANNOUNCE","Starter – ENGAGE (10 sec max)","Oil pressure – GREEN ARC"],
+  "AFTER START":["Oil pressure – GREEN ARC","Warm-up RPM – 1000 MAX","Increase to – 1200 RPM","Magnetos – BOTH checked","Electric pump – OFF","Alternator – ON","Ammeter – GREEN ARC","Alarms – TESTED / OFF","Nav lights – ON if required","Gyro suction – CHECKED","DI – ALIGNED","Altimeter – QNH","Radio / Radionav – ON (frequencies set)","ATIS – NOTED"],
+  "TAXI":["Time – NOTED","Parking brake – RELEASED","Carb heat – COLD","Brakes – EFFECTIVE & SYMMETRIC","Gyros – CHECKED"],
+  "ENGINE RUN-UP":["Parking brake – SET","All engine instruments – GREEN ARC","⚠ If oil temp too low – wait for warm-up","RPM – 1800","Aircraft – NOT MOVING","Alarms – OFF","Magneto check – drop < 175 RPM / diff < 50 RPM","Carb heat – TESTED","Gyro suction – CHECKED","Idle check – 600 to 750 RPM","RPM – 1200"],
+  "BEFORE TAKEOFF":["Parking brake – RELEASED / feet on brakes","Controls – FREE & CORRECT SENSE","Magnetos – BOTH","Mixture – FULL RICH","Carb heat – COLD","Oil pressure – GREEN ARC / temp GREEN ARC","Harnesses – PILOT & PAX SECURED","Fuel – ENDURANCE ANNOUNCED","Fuel cutoff – GREEN ARC / light OFF","Electric pump – ON","Landing light – ON","Battery – ON / Alternator ON / charge checked","Flaps – FIRST NOTCH EXTENDED","Canopy – CLOSED & LOCKED","Trim – SET FOR TAKEOFF","Altimeter – QNH","DI – ALIGNED","Transponder – SET / ALT","⚠ TAKEOFF & EMERGENCY BRIEFING COMPLETED"],
+  "AFTER TAKEOFF":["Best climb speed – 75 kt","Flaps – RETRACTED","Electric pump – OFF","Landing light – OFF"],
+  "APPROACH":["Pre-set – 2200 RPM","Downwind speed – 80 kt (150 km/h)","Carb heat – AS REQUIRED","Electric pump – ON","Flaps – FIRST NOTCH","Landing light – OFF"],
+  "BEFORE LANDING":["Flaps – SECOND NOTCH","Carb heat – COLD","Final approach speed – 65 kt (125 km/h)"],
+  "AFTER LANDING":["Electric pump – OFF","Landing lights – OFF","Flaps – RETRACTED","Transponder – STBY"],
+  "RETURN TO HOLDING POINT":["Canopy – CLOSED & LOCKED","All engine instruments – GREEN ARC","Alarms – OFF","Electric pump – ON","Flaps – FIRST NOTCH","Landing light – ON","Transponder – ALT","Trim – TAKEOFF / Altimeter QNH / DI ALIGNED"],
+  "SHUTDOWN":["Parking brake – SET","Engine cool-down – 1200 RPM / 1 minute","Radio / Radionav – CLOSING CALL / OFF","Transponder – 7000 / OFF","Alternator – OFF","Idle – THROTTLE CLOSED","Magnetos – KILL TEST then OFF / KEYS REMOVED","Mixture – CUTOFF","Flaps – SECOND NOTCH","Battery – OFF","Beacon – ON","Hobbs meter – NOTED (arrival)","Red covers (pitot & static x3) – REPLACED","Aircraft – CLEANED"]
 };
 
 const HR200_GENERIC_FR = {
-  "PRÉVOL":["Documents – À BORD (licence, médical, carnet)","Météo – CONSULTÉE","NOTAMs – VÉRIFIÉS","Carburant – VÉRIFIÉ (quantité, couleur, sans contamination)","Huile – VÉRIFIÉE (niveau, sans fuite)","Gouvernes – LIBRES & CORRECTES","Pitot – LIBRE","Pneumatiques – GONFLÉS & INTACTS","Cales – RETIRÉES"],
-  "AVANT MISE EN ROUTE":["Sièges & harnais – RÉGLÉS","Freins – TESTÉS & SERRÉS","Sélecteur carbu – EN SERVICE (réservoir plein)","Richesse – PLEIN RICHE","Gaz – FERMÉS","Réchauffage carbu – FROID","Masse – EN SERVICE","Feu anticollision – EN SERVICE"],
-  "MISE EN ROUTE":["HÉLICE – ANNONCÉE","Magnétos – LES DEUX","Gaz – CRANTÉS","Démarreur – ENCLENCHÉ","Pression huile – VÉRIFIÉE (30s)","Régime – STABILISÉ à 1000 tr/min"],
-  "APRÈS MISE EN ROUTE":["Volets – RENTRÉS","Instruments – VÉRIFIÉS","Altimètre – QNH CALÉ","DI – ALIGNÉ","Radio – EN SERVICE (ATIS/INFO)","Transpondeur – ALT"],
-  "ROULAGE":["Commandes – LIBRES & CORRECTES","Freins – VÉRIFIÉS","DI – VÉRIFIÉ vs compas","Vitesse roulage – CONTRÔLÉE"],
-  "POINT FIXE":["Frein de parc – SERRÉ","1800 tr/min","Vérif magnétos – G, D, LES DEUX (chute max 125)","Réchauffage carbu – EN SERVICE puis FROID","Tous les jauges – VERTS","1000 tr/min ralenti"],
-  "AVANT DÉCOLLAGE":["Trim – DÉCOLLAGE","Volets – RÉGLÉS","Richesse – PLEIN RICHE","Transpondeur – ALT","Portes – VERROUILLÉES","Piste – LIBRE","⚠ Urgence: atterrir devant si panne moteur au décollage"],
-  "APRÈS DÉCOLLAGE":["Volets – RENTRÉS","Puissance – RÉGLÉE montée","Réchauffage carbu – VÉRIFIÉ"],
-  "APPROCHE":["ATIS – OBTENU","Altimètre – QNH","Richesse – PLEIN RICHE","Réchauffage carbu – EN SERVICE","Carburant – RÉSERVOIR PLEIN","Volets – SELON BESOIN"],
-  "AVANT ATTERRISSAGE":["Volets – COMPLETS","Vitesse – Vref","Richesse – PLEIN RICHE","⚠ Remise de gaz: pleins gaz, volets 20°, montée positive"],
-  "APRÈS ATTERRISSAGE":["Réchauffage carbu – FROID","Volets – RENTRÉS","Transpondeur – VEILLE"],
-  "RETOUR POINT D\'ARRÊT":["Transpondeur – VEILLE","Radio – COMPTE RENDU piste dégagée","Frein de parc – SELON BESOIN"],
-  "ARRÊT MOTEUR":["Frein de parc – SERRÉ","Avionique – HORS SERVICE","Gaz – RALENTI (2 min)","Richesse – COUPÉE","Magnétos – COUPÉES","Masse – HORS SERVICE","Commandes – BLOQUÉES"]
+  "PRÉVOL":["Purge décanteur – 1 POINT (1er vol)","Barre de tractage – RETIRÉE","Verrière – PROPRE","Batterie – ON","Feux & phare – VÉRIFIÉS","Avertisseur de décrochage – VÉRIFIÉ","Pompe à essence auxiliaire – VÉRIFIÉE","Quantité d'essence – VÉRIFIÉE","Batterie – OFF","Huile – ENTRE 5 ET 6","Flammes x3 – RETIRÉES","Prévol extérieure – EFFECTUÉE","Papiers avion et pilote – VÉRIFIÉS / À BORD","Micro de secours à main – À BORD","Tirette coupe-circuit essence – POUSSÉE (gardée)","Horamètre départ – RELEVÉ","Sièges – RÉGLÉS / VERROUILLÉS","Ceintures – RÉGLÉES","Verrière – TIRÉE NON VERROUILLÉE"],
+  "AVANT MISE EN ROUTE":["Frein de parc – SERRÉ","Servitudes électriques – OFF","Réchauffage carburateur – FROID","Mixture – PLEIN RICHE","Batterie – ON","Feu anticollision – ON","Volets – RENTRÉS","Magnétos – CLÉS EN PLACE / OFF"],
+  "MISE EN ROUTE":["Réchauffage carburateur – TIRÉ SELON CONDITIONS","Casques – HORS DES OREILLES","Pompe électrique – ON","Magnétos – BOTH","MOTEUR FROID – Injections: 3","MOTEUR CHAUD – Injections: 0","Manette des gaz – ½ cm","ABORDS DÉGAGÉS – ANNONCER","Démarreur – ENCLENCHÉ (10 sec maxi)","Pression d'huile – PLAGE VERTE"],
+  "APRÈS MISE EN ROUTE":["Pression d'huile – PLAGE VERTE","Régime chauffe moteur – 1000 RPM MAXI","Laisser monter à – 1200 RPM","Magnétos – BOTH VÉRIFIÉ","Pompe électrique – OFF","Alternateur – ON","Ampèremètre – PLAGE VERTE","Alarmes – TESTÉES / ÉTEINTES","Feux de nav – ON si nécessité","Dépression gyro – VÉRIFIÉE","Directionnel – RECALÉ","Altimètre – QNH","Radio / Radionav – ON (fréquences)","Paramètres ATIS – NOTÉS"],
+  "ROULAGE":["Heure – NOTÉE","Frein de parc – DÉBLOQUÉ","Réchauffage carburateur – FROID","Freins – EFFICACES ET SYMÉTRIQUES","Gyros – VÉRIFIÉS"],
+  "POINT FIXE":["Frein de parc – SERRÉ","Tous instruments moteur – PLAGE VERTE","⚠ Si tempé d'huile trop basse – attendre chauffe","Régime moteur – 1800 RPM","Immobilité de l'avion – VÉRIFIÉE","Alarmes – ÉTEINTES","Sélections magnétos – Chute < 175 RPM / Écart < 50 RPM","Réchauffage carburateur – ESSAYÉ","Dépression gyro – VÉRIFIÉE","Essai ralenti – 600 à 750 RPM","Régime – 1200 RPM"],
+  "AVANT DÉCOLLAGE":["Frein de parc – DESSERRÉ / pieds sur les freins","Commandes – LIBRES / DANS LE BON SENS","Magnétos – BOTH","Mixture – PLEIN RICHE","Réchauffage carburateur – FROID","Huile – PRESSION PLAGE VERTE / TÉMOIN ÉTEINT / TEMP PLAGE VERTE","Ceintures – PIL ET PAX ATTACHÉS","Essence – AUTONOMIE ANNONCÉE","Coupe-circuit – PRESSION PLAGE VERTE / TÉMOIN ÉTEINT","Pompe électrique – ON","Phare d'atterrissage – ON","Électricité – BATTERIE ON / ALTERNATEUR ON / CHARGE VÉRIFIÉE","Volets – SORTIS 1ER CRAN","Verrière – FERMÉE, VERROUILLÉE","Compensateur – DÉCOLLAGE","Altimètre – QNH","Directionnel – RECALÉ","Transpondeur – RÉGLÉ / ALT","⚠ BRIEFING DÉCOLLAGE ET PANNES EFFECTUÉ"],
+  "APRÈS DÉCOLLAGE":["Meilleure montée – 75 kt","Volets – RENTRÉS","Pompe électrique – OFF","Phare d'atterrissage – OFF"],
+  "APPROCHE":["Préaffichage – 2200 RPM","Vent arrière – 80 kt (150 km/h)","Réchauffage carburateur – SELON CONDITIONS","Pompe électrique – ON","Volets – SORTIS 1ER CRAN","Phare d'atterrissage – OFF"],
+  "AVANT ATTERRISSAGE":["Volets – SORTIS 2ÈME CRAN","Réchauffage carburateur – FROID","Approche finale – 65 kt (125 km/h)"],
+  "APRÈS ATTERRISSAGE":["Pompe électrique – OFF","Phares – OFF","Volets – RENTRÉS","Transpondeur – VEILLE"],
+  "RETOUR POINT D'ARRÊT":["Verrière – FERMÉE, VERROUILLÉE","Tous instruments moteur – PLAGE VERTE","Alarmes – ÉTEINTES","Pompe électrique – ON","Volets – SORTIS 1ER CRAN","Phare d'atterrissage – ON","Transpondeur – ALT","Compensateur DÉCOLLAGE / Altimètre QNH / Directionnel RECALÉ"],
+  "ARRÊT MOTEUR":["Frein de parc – SERRÉ","Refroidissement moteur – 1200 RPM / 1 MINUTE","Radio / Radionav – CLÔTURE / OFF","Transpondeur – 7000 / OFF","Alternateur – OFF","Moteur au ralenti – MANETTE FERMÉE","Magnétos – ESSAIS COUPURE puis OFF / CLÉS RETIRÉES","Mixture – ÉTOUFFOIR","Volets – SORTIS 2ÈME CRAN","Batterie – OFF","Feu anticollision – ON","Horamètre arrivée – RELEVÉ","Flammes pitot et statiques – EN PLACE x3","Nettoyage de l'avion – EFFECTUÉ"]
 };
 
 const DR460_EN = {
-  "PRE-FLIGHT":["Documents – ONBOARD","Weather/NOTAMs – CHECKED","Fuel (100LL) – CHECKED (quantity, no water)","Oil – 6-8qt CHECKED","GTN750 database – CURRENT","All control surfaces – FREE & CORRECT","VHF antennas – SECURE","Lights – CHECKED"],
-  "BEFORE START":["Seats & harness – SET","Brakes – SET","Fuel selector – ON","Mixture – RICH","Avionics master – OFF","Beacon – ON","Master – ON","Throttle – CRACKED"],
-  "ENGINE START":["CLEAR PROP – CALLED","Magnetos – BOTH","Starter – ENGAGE","Oil pressure – 30s","RPM – 1000 idle"],
-  "AFTER START":["Avionics master – ON","GTN750 – INITIALIZE","Altimeter – QNH","DI – ALIGN","Radio – ATIS","Transponder – ALT"],
-  "TAXI":["Controls – FREE","Brakes – TEST","DI – CHECK","Speed – CONTROLLED"],
-  "ENGINE RUN-UP":["Parking brake – SET","1800 RPM","Magneto check – L, R, BOTH","Carb heat – CHECK","Gauges – GREEN"],
-  "BEFORE TAKEOFF":["GTN750 – FLIGHT PLAN LOADED","Transponder – ALT","Trim – TAKEOFF","Mixture – RICH","Fuel selector – FULLEST TANK","Pump – ON","Doors – LOCKED","⚠ Emergency: land ahead if engine fails"],
-  "AFTER TAKEOFF":["Flaps – RETRACT","Climb power – SET","GTN750 – ENGAGE autopilot if req."],
-  "APPROACH":["GTN750 – APPROACH LOADED","Altimeter – QNH","Mixture – RICH","Fuel – CHECK","Carb heat – ON"],
-  "BEFORE LANDING":["GTN750 – ACTIVE","Flaps – FULL","Speed – Vref","⚠ Go-around: full power, positive climb"],
-  "AFTER LANDING":["Flaps – RETRACT","Transponder – STBY","GTN750 – FLIGHT LOG"],
-  "SHUTDOWN":["Parking brake – SET","Avionics – OFF","Mixture – CUT OFF","Magnetos – OFF","Master – OFF"]
+  "PRE-FLIGHT":["Fuel strainer – DRAINED (4 points, 1st flight)","Tow bar – REMOVED","Canopy – CLEAN","Battery – ON","Lights & landing light – CHECKED","Stall warning – CHECKED","Electric fuel pump – CHECKED","Fuel quantity – CHECKED","Battery – OFF","Oil – BETWEEN 6 AND 8","Red covers (x3) – REMOVED","External pre-flight – COMPLETED","Documents (aircraft & pilot) – ONBOARD","Handheld mic – ONBOARD","Fuel valve – OPEN","Hobbs meter – NOTED (departure)","Seats – ADJUSTED & LOCKED","Harnesses – SECURED","Canopy – PULLED, NOT LOCKED"],
+  "BEFORE START":["Parking brake – SET","Avionics master – OFF","Carb heat – COLD","Mixture – FULL RICH","Battery – ON","Beacon – ON","Flaps – RETRACTED","Fuel selector – FULLEST EMPTY AUX TANK","Magnetos – KEYS IN / OFF"],
+  "ENGINE START":["Carb heat – AS REQUIRED (cold conditions)","Headsets – CLEAR OF PROP","Electric pump – ON","Magnetos – BOTH","COLD ENGINE – Prime: 6 to 8 strokes","WARM ENGINE – Prime: 2 to 3 strokes","Throttle – ½ cm open","CLEAR PROP – ANNOUNCE","Starter – ENGAGE (first signs of ignition)","Magnetos – BOTH","Oil pressure – GREEN ARC"],
+  "AFTER START":["Oil pressure – GREEN ARC","Warm-up RPM – 1000 MAX","Increase to – 1200 RPM","Magnetos – BOTH checked","Electric pump – OFF","Alternator – ON","Ammeter – GREEN ARC","Alarms – TESTED / OFF","Avionics master – ON","GARMIN GTN750 – DATABASE checked / fuel on board set / flight plan loaded","Radio / Radionav – SET (frequencies)","Transponder – GND checked","Nav lights – ON if required","Gyro suction – CHECKED","DI – ALIGNED","Altimeter – QNH","Taxi light – ON","ATIS – NOTED"],
+  "TAXI":["Time – NOTED","Parking brake – RELEASED","Carb heat – COLD","Brakes – EFFECTIVE & SYMMETRIC","Gyros – CHECKED"],
+  "ENGINE RUN-UP":["Parking brake – SET","All engine instruments – GREEN ARC","⚠ If oil temp too low – wait for warm-up","RPM – 2000","Aircraft – NOT MOVING","Alarms – OFF","Magneto check – drop < 175 RPM / diff < 50 RPM","Carb heat – TESTED","Gyro suction – CHECKED","Idle check – 600 to 750 RPM","RPM – 1200"],
+  "BEFORE TAKEOFF":["Parking brake – RELEASED / feet on brakes","Controls – FREE & CORRECT SENSE","Magnetos – BOTH","Mixture – FULL RICH","Carb heat – COLD","Oil pressure – GREEN ARC / light OFF / temp GREEN ARC","Harnesses – PILOT & PAX SECURED","Fuel – ENDURANCE ANNOUNCED","Fuel selector – FULLEST TANK / GREEN ARC / light OFF","Electric pump – ON","Landing light – ON","Battery ON / Alternator ON / charge checked","Flaps – FIRST NOTCH EXTENDED","Canopy – CLOSED & LOCKED","Trim – SET FOR TAKEOFF","Altimeter – QNH","Transponder – SET / PFD & MFD SET","⚠ TAKEOFF & EMERGENCY BRIEFING COMPLETED"],
+  "AFTER TAKEOFF":["Best climb speed – 80 kt (150 km/h)","Flaps – RETRACTED","Electric pump – OFF","Landing light – OFF"],
+  "APPROACH":["Pre-set – 1800 RPM","Downwind speed – 80 kt (150 km/h)","Carb heat – AS REQUIRED (temperature)","Electric pump – ON","Flaps – FIRST NOTCH","Landing light – ON","Fuel selector – FULLEST TANK"],
+  "BEFORE LANDING":["Flaps – SECOND NOTCH","Carb heat – COLD","Final approach speed – 65 kt (125 km/h)"],
+  "AFTER LANDING":["Electric pump – OFF","Landing light – OFF","Flaps – RETRACTED","Transponder – 7000"],
+  "SHUTDOWN":["Parking brake – SET","Engine cool-down – 1200 RPM / 1 minute","Radio / Radionav – CLOSING CALL","Flight plan – DELETED from database","Personal waypoints – DELETED from database","Avionics master – OFF","Alternator – OFF","Idle – THROTTLE CLOSED","Magnetos – KILL TEST then OFF / KEYS REMOVED","Mixture – CUTOFF","Flaps – SECOND NOTCH","Battery – OFF","Beacon – ON","Hobbs meter – NOTED (arrival)","Red covers (pitot & static x3) – REPLACED","Aircraft – CLEANED"]
 };
 
 const DR460_FR = {
-  "PRÉVOL":["Documents – À BORD","Météo/NOTAMs – VÉRIFIÉS","Carburant (100LL) – VÉRIFIÉ (quantité, sans eau)","Huile – 6-8qt VÉRIFIÉE","Base de données GTN750 – À JOUR","Toutes gouvernes – LIBRES & CORRECTES","Antennes VHF – FIXÉES","Feux – VÉRIFIÉS"],
-  "AVANT MISE EN ROUTE":["Sièges & harnais – RÉGLÉS","Freins – SERRÉS","Sélecteur carbu – EN SERVICE","Richesse – PLEIN RICHE","Maître avionique – COUPÉ","Feu anticollision – EN SERVICE","Masse – EN SERVICE","Gaz – CRANTÉS"],
-  "MISE EN ROUTE":["HÉLICE – ANNONCÉE","Magnétos – LES DEUX","Démarreur – ENCLENCHÉ","Pression huile – 30s","Régime – 1000 tr/min ralenti"],
-  "APRÈS MISE EN ROUTE":["Maître avionique – EN SERVICE","GTN750 – INITIALISATION","Altimètre – QNH","DI – ALIGNÉ","Radio – ATIS","Transpondeur – ALT"],
-  "ROULAGE":["Commandes – LIBRES","Freins – VÉRIFIÉS","DI – VÉRIFIÉ","Vitesse – CONTRÔLÉE"],
-  "POINT FIXE":["Frein de parc – SERRÉ","1800 tr/min","Vérif magnétos – G, D, LES DEUX","Réchauffage carbu – VÉRIFIÉ","Jauges – VERTES"],
-  "AVANT DÉCOLLAGE":["GTN750 – PLAN DE VOL CHARGÉ","Transpondeur – ALT","Trim – DÉCOLLAGE","Richesse – PLEIN RICHE","Sélecteur carburant – RÉSERVOIR LE PLUS PLEIN","Pompe – EN SERVICE","Portes – VERROUILLÉES","⚠ Urgence: atterrir devant si panne moteur"],
-  "APRÈS DÉCOLLAGE":["Volets – RENTRÉS","Puissance montée – RÉGLÉE","GTN750 – PILOTE AUTO si requis"],
-  "APPROCHE":["GTN750 – APPROCHE CHARGÉE","Altimètre – QNH","Richesse – PLEIN RICHE","Carburant – VÉRIFIÉ","Réchauffage carbu – EN SERVICE"],
-  "AVANT ATTERRISSAGE":["GTN750 – ACTIF","Volets – COMPLETS","Vitesse – Vref","⚠ Remise de gaz: pleins gaz, montée positive"],
-  "APRÈS ATTERRISSAGE":["Volets – RENTRÉS","Transpondeur – VEILLE","GTN750 – JOURNAL DE VOL"],
-  "ARRÊT MOTEUR":["Frein de parc – SERRÉ","Avionique – HORS SERVICE","Richesse – COUPÉE","Magnétos – COUPÉES","Masse – HORS SERVICE"]
+  "PRÉVOL":["Purge décanteur – 4 POINTS (1er vol)","Barre de tractage – RETIRÉE","Verrière – PROPRE","Batterie – ON","Feux & phare – VÉRIFIÉS","Avertisseur de décrochage – VÉRIFIÉ","Pompe à essence auxiliaire – VÉRIFIÉE","Quantité d'essence – VÉRIFIÉE","Batterie – OFF","Huile – ENTRE 6 ET 8","Flammes x3 – RETIRÉES","Prévol extérieure – EFFECTUÉE","Papiers avion et pilote – VÉRIFIÉS / À BORD","Micro de secours à main – À BORD","Robinet d'essence – OUVERT","Horamètre départ – RELEVÉ","Sièges – RÉGLÉS / VERROUILLÉS","Ceintures – RÉGLÉES","Verrière – TIRÉE NON VERROUILLÉE"],
+  "AVANT MISE EN ROUTE":["Frein de parc – SERRÉ","Avionique master – OFF","Réchauffage carburateur – FROID","Mixture – PLEIN RICHE","Batterie – ON","Feu anticollision – ON","Volets – RENTRÉS","Robinet d'essence – AUXILIAIRE LE PLUS VIDE","Magnétos – CLÉS EN PLACE / OFF"],
+  "MISE EN ROUTE":["Réchauffage carburateur – TIRÉ SELON CONDITIONS","Casques – HORS DES OREILLES","Pompe électrique – ON","Magnétos – BOTH","MOTEUR FROID – Injections: 6 à 8","MOTEUR CHAUD – Injections: 2 à 3","Manette des gaz – ½ cm","ABORDS DÉGAGÉS – ANNONCER","Démarreur – ENCLENCHÉ (dès premiers signes)","Magnétos – BOTH","Pression d'huile – PLAGE VERTE"],
+  "APRÈS MISE EN ROUTE":["Pression d'huile – PLAGE VERTE","Régime chauffe moteur – 1000 RPM MAXI","Laisser monter à – 1200 RPM","Magnétos – BOTH VÉRIFIÉ","Pompe électrique – OFF","Alternateur – ON","Ampèremètre – PLAGE VERTE","Alarmes – TESTÉES / ÉTEINTES","Avionique master – ON","GARMIN GTN750 – DATABASE vérifiée / fuel on board réglé / plan de vol chargé","Radio / Radionav – RÉGLÉE (fréquences)","Transpondeur – GND VÉRIFIÉ","Feux de nav – ON si nécessité","Dépression gyro – VÉRIFIÉE","Directionnel – RECALÉ","Altimètre – QNH","Phare de roulage – ON","Paramètres ATIS – NOTÉS"],
+  "ROULAGE":["Heure – NOTÉE","Frein de parc – DÉBLOQUÉ","Réchauffage carburateur – FROID","Freins – EFFICACES ET SYMÉTRIQUES","Gyros – VÉRIFIÉS"],
+  "POINT FIXE":["Frein de parc – SERRÉ","Tous instruments moteur – PLAGE VERTE","⚠ Si tempé d'huile trop basse – attendre chauffe","Régime moteur – 2000 RPM","Immobilité de l'avion – VÉRIFIÉE","Alarmes – ÉTEINTES","Sélections magnétos – Chute < 175 RPM / Écart < 50 RPM","Réchauffage carburateur – ESSAYÉ","Dépression gyro – VÉRIFIÉE","Essai ralenti – 600 à 750 RPM","Régime – 1200 RPM"],
+  "AVANT DÉCOLLAGE":["Frein de parc – DÉBLOQUÉ / pieds sur les freins","Commandes – LIBRES / DANS LE BON SENS","Magnétos – BOTH","Mixture – PLEIN RICHE","Réchauffage carburateur – FROID","Huile – PRESSION PLAGE VERTE / TÉMOIN ÉTEINT / TEMP PLAGE VERTE","Ceintures – PIL ET PAX ATTACHÉS","Essence – AUTONOMIE ANNONCÉE","Robinet d'essence – LE PLUS PLEIN / PRESSION PLAGE VERTE / TÉMOIN ÉTEINT","Pompe électrique – ON","Phare d'atterrissage – ON","Électricité – BATTERIE ON / ALTERNATEUR ON / CHARGE VÉRIFIÉE","Volets – SORTIS 1ER CRAN","Verrière – FERMÉE, VERROUILLÉE","Compensateur – DÉCOLLAGE","Altimètre – QNH","Transpondeur – RÉGLÉ / PFD ET MFD RÉGLÉS","⚠ BRIEFING DÉCOLLAGE ET PANNES EFFECTUÉ"],
+  "APRÈS DÉCOLLAGE":["Meilleure montée – 80 kt (150 km/h)","Volets – RENTRÉS","Pompe électrique – OFF","Phare d'atterrissage – OFF"],
+  "APPROCHE":["Préaffichage – 1800 RPM","Vent arrière – 80 kt (150 km/h)","Réchauffage carburateur – SELON TEMPÉ","Pompe électrique – ON","Volets – SORTIS 1ER CRAN","Phare d'atterrissage – ON","Robinet d'essence – LE PLUS PLEIN"],
+  "AVANT ATTERRISSAGE":["Volets – SORTIS 2ÈME CRAN","Réchauffage carburateur – FROID","Approche finale – 65 kt (125 km/h)"],
+  "APRÈS ATTERRISSAGE":["Pompe électrique – OFF","Phare d'atterrissage – OFF","Volets – RENTRÉS","Transpondeur – 7000"],
+  "ARRÊT MOTEUR":["Frein de parc – SERRÉ","Refroidissement moteur – 1200 RPM / 1 MINUTE","Radio / Radionav – CLÔTURE","Plan de vol – EFFACÉ DE LA BASE","Points personnels – EFFACÉS DE LA BASE","Avionique master – OFF","Alternateur – OFF","Moteur au ralenti – MANETTE FERMÉE","Magnétos – ESSAIS COUPURE puis OFF / CLÉS RETIRÉES","Mixture – ÉTOUFFOIR","Volets – SORTIS 2ÈME CRAN","Batterie – OFF","Feu anticollision – ON","Horamètre arrivée – RELEVÉ","Flammes pitot et statiques – EN PLACE x3","Nettoyage de l'avion – EFFECTUÉ"]
 };
 
 const DR400_EN = {
-  "PRE-FLIGHT":["Documents – ONBOARD","Weather/NOTAMs – CHECKED","Fuel (JET-A1) – CHECKED (quantity, correct type)","Oil – CHECKED (FADEC system)","FADEC – SELF-TEST PASSED","Control surfaces – FREE & CORRECT","Lights – CHECKED"],
-  "BEFORE START":["Seats & harness – SET","Brakes – SET","FADEC – ON","Battery – CHECKED","Beacon – ON","Throttle – IDLE"],
-  "ENGINE START":["FADEC ready – CONFIRMED","Start switch – ENGAGE","FADEC – MONITORING startup","RPM & temps – RISING normally"],
-  "AFTER START":["FADEC – NO FAULT","Instruments – CHECK","Altimeter – QNH","Radio – ATIS","Transponder – ALT"],
-  "TAXI":["Controls – FREE","Brakes – TEST","FADEC – GREEN"],
-  "ENGINE RUN-UP":["Parking brake – SET","FADEC – FULL AUTHORITY CHECK","Power levels – AS REQUIRED","All gauges – GREEN"],
-  "BEFORE TAKEOFF":["FADEC – FLIGHT MODE","Transponder – ALT","Trim – TAKEOFF","Doors – LOCKED","⚠ FADEC failure: MANUAL mode available"],
-  "AFTER TAKEOFF":["Climb power – FADEC MANAGED","Instruments – CHECK"],
-  "APPROACH":["FADEC – APPROACH MODE","Altimeter – QNH","Fuel – CHECK"],
-  "BEFORE LANDING":["FADEC – APPROACH IDLE READY","Flaps – FULL","Speed – Vref"],
-  "AFTER LANDING":["FADEC – TAXI MODE","Transponder – STBY"],
-  "SHUTDOWN":["Parking brake – SET","Avionics – OFF","FADEC – SHUTDOWN SEQUENCE","Engine – STOP","Master – OFF"]
+  "PRE-FLIGHT":["Fuel strainer – DRAINED (2 points, 1st flight)","Tow bar – REMOVED","Canopy – CLEAN","Battery – ON","Lights & landing light – CHECKED","Stall warning – CHECKED","Electric fuel pump – CHECKED","Fuel quantity – CHECKED","Battery – OFF","Oil – BETWEEN 6 AND 8","Red covers (x3) – REMOVED","External pre-flight – COMPLETED","Documents (aircraft & pilot) – ONBOARD","Handheld mic – ONBOARD","Fuel valve – OPEN","Hobbs meter – NOTED (departure)","Seats – ADJUSTED & LOCKED","Harnesses – SECURED","Canopy – PULLED, NOT LOCKED"],
+  "BEFORE START":["Parking brake – SET","Avionics master – OFF","Battery – ON","Beacon – ON","CED warning lights – TESTED","FADEC selector – AUTO / HELD","Flaps – RETRACTED","Starter – KEYS IN"],
+  "ENGINE START":["Headsets – CLEAR OF PROP","Fuel temperature – CHECKED","Electric pump – ON","Throttle – IDLE","Engine contact switch – ON","FADEC A & B lights – OFF","Glow plug light – WAIT FOR EXTINCTION","CLEAR PROP – ANNOUNCE","Starter – ENGAGE (20 sec max)","Oil pressure (OP) – GREEN (CED indicator)"],
+  "AFTER START":["Oil pressure – GREEN (CED)","Idle – CHECKED","Engine warm-up at idle – 2 minutes","Electric pump – OFF","CED alert – CLEAR (reset)","Voltmeter – GREEN ARC","Alarms – TESTED / OFF","Avionics master – ON","Nav lights – ON if required","Gyro suction – CHECKED","DI – ALIGNED","ATIS – NOTED","Altimeter – QNH","Taxi light – ON"],
+  "TAXI":["Time – NOTED","Parking brake – RELEASED","Engine warm-up (OT/CT yellow) – 1400 RPM MAX","Brakes – EFFECTIVE & SYMMETRIC","Gyros – CHECKED"],
+  "ENGINE RUN-UP":["Parking brake – SET","Taxi light – OFF","Engine warm-up – 1400 RPM until OT/CT green","CED lights – ALL GREEN","Throttle – FULL POWER","RPM – 95% / 2200 RPM","Aircraft – NOT MOVING","Alarms – OFF","Throttle – IDLE","FADEC test button – PRESS & HOLD","FADEC A & B lights – CHECKED","Gyro suction – GREEN ARC"],
+  "BEFORE TAKEOFF":["Parking brake – RELEASED / feet on brakes","Controls – FREE & CORRECT SENSE","Oil pressure – GREEN ARC / temp GREEN ARC","Harnesses – PILOT & PAX SECURED","Fuel – ENDURANCE ANNOUNCED","Electric pump – ON","Landing light – ON","Battery ON / charge checked","Flaps – FIRST NOTCH EXTENDED","Canopy – CLOSED & LOCKED","Trim – SET FOR TAKEOFF","Altimeter – QNH","Transponder – SET / ALT","⚠ TAKEOFF & EMERGENCY BRIEFING COMPLETED"],
+  "AFTER TAKEOFF":["Best climb speed – 80 kt (150 km/h)","Flaps – RETRACTED","Electric pump – OFF","Landing light – OFF"],
+  "APPROACH":["Pre-set – 45% power","Downwind speed – 80 kt (150 km/h)","Electric pump – ON","Flaps – FIRST NOTCH","Landing light – ON"],
+  "BEFORE LANDING":["Flaps – SECOND NOTCH","Final approach speed – 70 kt (130 km/h)"],
+  "AFTER LANDING":["Electric pump – OFF","Landing light – OFF","Flaps – RETRACTED","Transponder – 7000 / STBY"],
+  "SHUTDOWN":["Parking brake – SET","Engine cool-down – IDLE / 2 minutes","Radio – CLOSING CALL","Avionics master – OFF","Engine contact switch – OFF","Starter – KEYS REMOVED","Flaps – SECOND NOTCH","Battery – OFF","Beacon – ON","Hobbs meter – NOTED (arrival)"]
 };
 
 const DR400_FR = {
-  "PRÉVOL":["Documents – À BORD","Météo/NOTAMs – VÉRIFIÉS","Carburant (JET-A1) – VÉRIFIÉ (quantité, type correct)","Huile – VÉRIFIÉE (système FADEC)","FADEC – AUTO-TEST RÉUSSI","Gouvernes – LIBRES & CORRECTES","Feux – VÉRIFIÉS"],
-  "AVANT MISE EN ROUTE":["Sièges & harnais – RÉGLÉS","Freins – SERRÉS","FADEC – EN SERVICE","Batterie – VÉRIFIÉE","Feu anticollision – EN SERVICE","Gaz – RALENTI"],
-  "MISE EN ROUTE":["FADEC prêt – CONFIRMÉ","Interrupteur démarrage – ENCLENCHÉ","FADEC – SURVEILLANCE démarrage","Régime & temps – MONTÉE normale"],
-  "APRÈS MISE EN ROUTE":["FADEC – SANS DÉFAUT","Instruments – VÉRIFIÉS","Altimètre – QNH","Radio – ATIS","Transpondeur – ALT"],
-  "ROULAGE":["Commandes – LIBRES","Freins – VÉRIFIÉS","FADEC – VERT"],
-  "POINT FIXE":["Frein de parc – SERRÉ","FADEC – VÉRIFICATION PLEINE AUTORITÉ","Niveaux puissance – SELON BESOIN","Toutes jauges – VERTES"],
-  "AVANT DÉCOLLAGE":["FADEC – MODE VOL","Transpondeur – ALT","Trim – DÉCOLLAGE","Portes – VERROUILLÉES","⚠ Panne FADEC: MODE MANUEL disponible"],
-  "APRÈS DÉCOLLAGE":["Puissance montée – GÉRÉE PAR FADEC","Instruments – VÉRIFIÉS"],
-  "APPROCHE":["FADEC – MODE APPROCHE","Altimètre – QNH","Carburant – VÉRIFIÉ"],
-  "AVANT ATTERRISSAGE":["FADEC – RALENTI APPROCHE PRÊT","Volets – COMPLETS","Vitesse – Vref"],
-  "APRÈS ATTERRISSAGE":["FADEC – MODE ROULAGE","Transpondeur – VEILLE"],
-  "ARRÊT MOTEUR":["Frein de parc – SERRÉ","Avionique – HORS SERVICE","FADEC – SÉQUENCE ARRÊT","Moteur – ARRÊT","Masse – HORS SERVICE"]
+  "PRÉVOL":["Purge décanteur – 2 POINTS (1er vol)","Barre de tractage – RETIRÉE","Verrière – PROPRE","Batterie – ON","Feux & phare – VÉRIFIÉS","Avertisseur de décrochage – VÉRIFIÉ","Pompe à essence auxiliaire – VÉRIFIÉE","Quantité de carburant – VÉRIFIÉE","Batterie – OFF","Huile – ENTRE 6 ET 8","Flammes x3 – RETIRÉES","Prévol extérieure – EFFECTUÉE","Papiers avion et pilote – VÉRIFIÉS / À BORD","Micro de secours à main – À BORD","Robinet carburant – OUVERT","Horamètre départ – RELEVÉ","Sièges – RÉGLÉS / VERROUILLÉS","Ceintures – RÉGLÉES","Verrière – TIRÉE NON VERROUILLÉE"],
+  "AVANT MISE EN ROUTE":["Frein de parc – SERRÉ","Avionique master – OFF","Batterie – ON","Feu anticollision – ON","Voyants CED – TESTÉS","Sélecteur FADEC – AUTO / GARDÉ","Volets – RENTRÉS","Démarreur – CLÉS EN PLACE"],
+  "MISE EN ROUTE":["Casques – HORS DES OREILLES","Température carburant – VÉRIFIÉE","Pompe électrique – ON","Manette des gaz – RALENTI","Interrupteur contact moteur – ON","Voyants FADEC A ET FADEC B – ÉTEINTS","Voyant préchauffage – ATTENDRE EXTINCTION","ABORDS DÉGAGÉS – ANNONCER","Démarreur – ENCLENCHÉ (20 sec maxi)","Pression d'huile (OP) – INDICATEUR VERT (CED)"],
+  "APRÈS MISE EN ROUTE":["Pression d'huile – INDICATEUR VERT (CED)","Ralenti – VÉRIFIÉ","Chauffage moteur ralenti – 2 MINUTES","Pompe électrique – OFF","Alerte CED – FAIRE EFFACEMENT","Voltmètre – PLAGE VERTE","Alarmes – TESTÉES / ÉTEINTES","Avionique master – ON","Feux de nav – ON si nécessité","Dépression gyro – VÉRIFIÉE","Directionnel – RECALÉ","Paramètres ATIS – NOTÉS","Altimètre – QNH","Phare de roulage – ON"],
+  "ROULAGE":["Heure – NOTÉE","Frein de parc – DÉBLOQUÉ","Chauffe moteur (OT/CT jaune) – 1400 RPM MAXI","Freins – EFFICACES ET SYMÉTRIQUES","Gyros – VÉRIFIÉS"],
+  "POINT FIXE":["Frein de parc – SERRÉ","Phare de roulage – OFF","Chauffage moteur – 1400 RPM jusqu'à OT/CT verts","Voyants CED – TOUS VERTS","Manette des gaz – PLEINS GAZ","Régime – 95% / 2200 RPM","Immobilité de l'avion – VÉRIFIÉE","Alarmes – ÉTEINTES","Manette des gaz – RALENTI","Bouton test FADEC – APPUYER ET MAINTENIR","Voyants FADEC A ET B – VÉRIFIÉS","Dépression gyro – PLAGE VERTE"],
+  "AVANT DÉCOLLAGE":["Frein de parc – DÉBLOQUÉ / pieds sur les freins","Commandes – LIBRES / DANS LE BON SENS","Huile – PRESSION PLAGE VERTE / TEMP PLAGE VERTE","Ceintures – PIL ET PAX ATTACHÉS","Essence – AUTONOMIE ANNONCÉE","Pompe électrique – ON","Phare d'atterrissage – ON","Électricité – BATTERIE ON / CHARGE VÉRIFIÉE","Volets – SORTIS 1ER CRAN","Verrière – FERMÉE, VERROUILLÉE","Compensateur – DÉCOLLAGE","Altimètre – QNH","Transpondeur – RÉGLÉ / ALT","⚠ BRIEFING DÉCOLLAGE ET PANNES EFFECTUÉ"],
+  "APRÈS DÉCOLLAGE":["Meilleure montée – 80 kt (150 km/h)","Volets – RENTRÉS","Pompe électrique – OFF","Phare d'atterrissage – OFF"],
+  "APPROCHE":["Préaffichage – 45% PUISSANCE","Vent arrière – 80 kt (150 km/h)","Pompe électrique – ON","Volets – SORTIS 1ER CRAN","Phare d'atterrissage – ON"],
+  "AVANT ATTERRISSAGE":["Volets – SORTIS 2ÈME CRAN","Approche finale – 70 kt (130 km/h)"],
+  "APRÈS ATTERRISSAGE":["Pompe électrique – OFF","Phare d'atterrissage – OFF","Volets – RENTRÉS","Transpondeur – 7000 / VEILLE"],
+  "ARRÊT MOTEUR":["Frein de parc – SERRÉ","Refroidissement moteur – RALENTI / 2 MINUTES","Radio – CLÔTURÉE","Avionique master – OFF","Interrupteur contact moteur – OFF","Démarreur – CLÉS RETIRÉES","Volets – SORTIS 2ÈME CRAN","Batterie – OFF","Feu anticollision – ON","Horamètre arrivée – RELEVÉ"]
 };
 
 const J3CUB_EN = {
-  "PRE-FLIGHT":["Weight & balance – CHECKED (max 680kg)","Documents – ONBOARD","Fuel – CHECKED (strainer drained)","Oil – 4-6qt CHECKED","Tailwheel – CHECKED (tire & spring)","Main gear – CHECKED","Flying wires & struts – CHECKED","Control surfaces – FREE","Fabric – NO DAMAGE"],
-  "BEFORE START":["Passenger brief – COMPLETED","Harness – SECURED","Fuel ON","Throttle – CRACKED","Magnetos – BOTH"],
-  "ENGINE START":["CLEAR PROP – CALLED (hand-propped)","Throttle – ADJUST 800-1000 RPM","Oil pressure – 30s CHECK"],
-  "AFTER START":["Instruments – CHECK","Altimeter – QNH","Radio – AS EQUIPPED","Tailwheel steering – FREE"],
-  "TAXI":["S-turns for forward visibility (TAILDRAGGER)","Brake – DIFFERENTIAL","Crosswind – AILERON INTO WIND","Speed – SLOW"],
-  "ENGINE RUN-UP":["Parking brake – CHOCKS SET","1500 RPM","Magneto check – L, R, BOTH (max drop 75 RPM)","Oil temp & pressure – GREEN"],
-  "BEFORE TAKEOFF":["Trim – NEUTRAL","Mixture – RICH","Tailwheel lock – AS REQUIRED","⚠ TAILDRAGGER: maintain directional control","⚠ No radio: LOOK & LISTEN before entering runway"],
-  "AFTER TAKEOFF":["Climb speed – 60-65 kt","Monitor tail rise on takeoff roll"],
-  "APPROACH":["Power – REDUCE","Speed – 65 kt base leg","⚠ No flaps on J3 Cub: energy management critical"],
-  "BEFORE LANDING":["Speed – 55-60 kt","3-POINT or WHEEL landing","⚠ TAILDRAGGER: hold full back stick after touchdown"],
-  "AFTER LANDING":["Speed – REDUCE on rollout","Tailwheel – STEER gently","Exit runway – PROMPTLY"],
-  "SHUTDOWN":["Throttle – IDLE","Magnetos – OFF","Fuel – OFF","Wheel chocks – PLACED"]
+  "PRE-FLIGHT":["Fuel strainer – DRAINED (1st flight of day)","Canopy – CLEAN","Fuel quantity – CHECKED","Oil – 3 to 4 (between marks)","External pre-flight – COMPLETED","Documents (aircraft & pilot) – ONBOARD","Handheld mic – ONBOARD","Fuel cutoff – PUSHED IN","Hobbs meter – NOTED (departure)","Seats – ADJUSTED & LOCKED","Harnesses – SECURED","Door – CLOSED & LOCKED"],
+  "BEFORE START":["Brakes – FEET ON PEDALS","Fuses – CHECKED","Electrical services – OFF","Carb heat – COLD","Mixture – FULL RICH","Battery – ON","Magnetos – KEYS IN / 0"],
+  "ENGINE START":["Carb heat – PULLED (cold weather)","Headsets – CLEAR OF PROP","Magnetos – 1+2","COLD ENGINE – Prime: 2 to 3 strokes","WARM ENGINE – Prime: 0 strokes","Throttle – ½ cm open","CLEAR PROP – ANNOUNCE","Starter – ENGAGE (10 sec max)","Oil pressure – GREEN ARC"],
+  "AFTER START":["Oil pressure – GREEN ARC","Warm-up RPM – 1000 MAX","Increase to – 1100 RPM","Magnetos – BOTH checked","Charge warning light – OFF","Altimeter – QNH","Radio / Radionav – ON (frequencies set)","ATIS – NOTED","Transponder – ALT"],
+  "TAXI":["Time – NOTED","Carb heat – COLD","Brakes – EFFECTIVE & SYMMETRIC","Compass – CHECKED"],
+  "ENGINE RUN-UP":["Brakes – FEET ON PEDALS","All engine instruments – GREEN ARC","⚠ If oil temp too low – wait for warm-up","RPM – 1500","Aircraft – NOT MOVING","Magneto check – drop < 175 RPM / diff < 50 RPM","Carb heat – TESTED","Idle check – 600 to 750 RPM","RPM – 1100"],
+  "BEFORE TAKEOFF":["Brakes – FEET ON PEDALS","Controls – FREE & CORRECT SENSE","Magnetos – 1+2","Mixture – FULL RICH","Carb heat – COLD","Oil pressure – GREEN ARC / temp GREEN ARC","Harnesses – PILOT & PAX SECURED","Fuel – ENDURANCE ANNOUNCED","Electrics – BATTERY ON / charge checked","Door & window – CLOSED & LOCKED","Trim – SET FOR TAKEOFF","Altimeter – QNH","Transponder – ALT","⚠ TAKEOFF & EMERGENCY BRIEFING COMPLETED"],
+  "AFTER TAKEOFF":["Best climb speed – 60 mph (100 km/h)"],
+  "APPROACH":["Pre-set – 1700 RPM","Downwind – 65 mph","Carb heat – AS REQUIRED"],
+  "BEFORE LANDING":["Carb heat – COLD","Final approach speed – 55 mph (95 km/h)"],
+  "SHUTDOWN":["Brakes – FEET ON PEDALS","Engine cool-down – 1000 RPM / 1 minute","Radio / Radionav – CLOSING CALL / OFF","Idle – THROTTLE CLOSED","Magnetos – KILL TEST then OFF / KEYS REMOVED","Mixture – CUTOFF","Fuel cutoff – PULLED","Battery – OFF","Hobbs meter – NOTED (arrival)","Aircraft – CLEANED"]
 };
 
 const J3CUB_FR = {
-  "PRÉVOL":["Masse & centrage – VÉRIFIÉ (max 680kg)","Documents – À BORD","Carburant – VÉRIFIÉ (purge décanteur)","Huile – 4-6qt VÉRIFIÉE","Roulette de queue – VÉRIFIÉE (pneumatique & ressort)","Train principal – VÉRIFIÉ","Haubans & mâts – VÉRIFIÉS","Gouvernes – LIBRES","Toile – SANS DOMMAGE"],
-  "AVANT MISE EN ROUTE":["Brief passager – EFFECTUÉ","Harnais – ATTACHÉS","Carburant – EN SERVICE","Gaz – CRANTÉS","Magnétos – LES DEUX"],
-  "MISE EN ROUTE":["HÉLICE – ANNONCÉE (démarrage à la main)","Gaz – AJUSTÉS 800-1000 tr/min","Pression huile – VÉRIFIÉE 30s"],
-  "APRÈS MISE EN ROUTE":["Instruments – VÉRIFIÉS","Altimètre – QNH","Radio – SELON ÉQUIPEMENT","Direction roulette – LIBRE"],
-  "ROULAGE":["Virages en S pour visibilité (QUEUE LEVÉE)","Frein – DIFFÉRENTIEL","Vent de travers – AILERON FACE AU VENT","Vitesse – LENTE"],
-  "POINT FIXE":["Frein de parc – CALES POSÉES","1500 tr/min","Vérif magnétos – G, D, LES DEUX (chute max 75 tr/min)","Temp & pression huile – VERTES"],
-  "AVANT DÉCOLLAGE":["Trim – NEUTRE","Richesse – PLEIN RICHE","Blocage roulette – SELON BESOIN","⚠ QUEUE LEVÉE: maintenir contrôle directionnel","⚠ Sans radio: REGARDER & ÉCOUTER avant entrée piste"],
-  "APRÈS DÉCOLLAGE":["Vitesse montée – 60-65 kt","Surveiller levée de queue au roulement"],
-  "APPROCHE":["Puissance – RÉDUITE","Vitesse – 65 kt étape de base","⚠ Pas de volets sur J3 Cub: gestion énergie critique"],
-  "AVANT ATTERRISSAGE":["Vitesse – 55-60 kt","Atterrissage 3 POINTS ou SUR ROUES","⚠ QUEUE LEVÉE: maintenir manche en butée arrière après toucher"],
-  "APRÈS ATTERRISSAGE":["Vitesse – RÉDUIRE au roulement","Roulette – DIRECTION douce","Quitter piste – RAPIDEMENT"],
-  "ARRÊT MOTEUR":["Gaz – RALENTI","Magnétos – COUPÉES","Carburant – COUPÉ","Cales – POSÉES"]
+  "PRÉVOL":["Purge décanteur – 1 POINT (1er vol)","Verrière – PROPRE","Quantité d'essence – VÉRIFIÉE","Huile – ENTRE 3 ET 4","Prévol extérieure – EFFECTUÉE","Papiers avion et pilote – VÉRIFIÉS / À BORD","Micro de secours à main – À BORD","Coupe-circuit essence – POUSSÉ","Horamètre départ – RELEVÉ","Sièges – RÉGLÉS / VERROUILLÉS","Ceintures – RÉGLÉES","Porte – FERMÉE / VERROUILLÉE"],
+  "AVANT MISE EN ROUTE":["Freins – AUX PIEDS","Fusibles – VÉRIFIÉS","Servitudes électriques – OFF","Réchauffage carburateur – FROID","Mixture – PLEIN RICHE","Batterie – ON","Magnétos – CLÉS EN PLACE / 0"],
+  "MISE EN ROUTE":["Réchauffage carburateur – TIRÉ (hiver)","Casques – HORS DES OREILLES","Magnétos – 1+2","MOTEUR FROID – Injections: 2 à 3","MOTEUR CHAUD – Injections: 0","Manette des gaz – ½ cm","ABORDS DÉGAGÉS – ANNONCER","Démarreur – ENCLENCHÉ (10 sec maxi)","Pression d'huile – PLAGE VERTE"],
+  "APRÈS MISE EN ROUTE":["Pression d'huile – PLAGE VERTE","Régime chauffe moteur – 1000 RPM MAXI","Laisser monter à – 1100 RPM","Magnétos – BOTH VÉRIFIÉ","Alarme de charge – ÉTEINTE","Altimètre – QNH","Radio / Radionav – ON (fréquences)","Paramètres ATIS – NOTÉS","Transpondeur – ALT"],
+  "ROULAGE":["Heure – NOTÉE","Réchauffage carburateur – FROID","Freins – EFFICACES ET SYMÉTRIQUES","Compas – VÉRIFIÉ"],
+  "POINT FIXE":["Freins – AUX PIEDS","Tous instruments moteur – PLAGE VERTE","⚠ Si tempé d'huile trop basse – attendre chauffe","Régime moteur – 1500 RPM","Immobilité de l'avion – VÉRIFIÉ","Sélections magnétos – Chute < 175 RPM / Écart < 50 RPM","Réchauffage carburateur – ESSAYÉ","Essai ralenti – 600 à 750 RPM","Régime – 1100 RPM"],
+  "AVANT DÉCOLLAGE":["Freins – AUX PIEDS","Commandes – LIBRES / DANS LE BON SENS","Magnétos – 1+2","Mixture – PLEIN RICHE","Réchauffage carburateur – FROID","Huile – PRESSION PLAGE VERTE / TEMP PLAGE VERTE","Ceintures – PIL ET PAX ATTACHÉS","Essence – AUTONOMIE ANNONCÉE","Électricité – BATTERIE ON / CHARGE VÉRIFIÉE","Porte et fenêtre – FERMÉES, VERROUILLÉES","Compensateur – RÉGLAGE DÉCOLLAGE","Altimètre – QNH","Transpondeur – ALT","⚠ BRIEFING DÉCOLLAGE ET PANNES EFFECTUÉ"],
+  "APRÈS DÉCOLLAGE":["Meilleure montée – 60 mph (100 km/h)"],
+  "APPROCHE":["Préaffichage – 1700 RPM","Vent arrière – 65 mph","Réchauffage carburateur – SELON CONDITIONS"],
+  "AVANT ATTERRISSAGE":["Réchauffage carburateur – FROID","Approche finale – 55 mph (95 km/h)"],
+  "ARRÊT MOTEUR":["Freins – AUX PIEDS","Refroidissement moteur – 1000 RPM / 1 MINUTE","Radio / Radionav – CLÔTURE / OFF","Moteur au ralenti – MANETTE FERMÉE","Magnétos – ESSAIS COUPURE puis OFF / CLÉS RETIRÉES","Mixture – ÉTOUFFOIR","Coupe-circuit essence – TIRÉ","Batterie – OFF","Horamètre arrivée – RELEVÉ","Nettoyage de l'avion – EFFECTUÉ"]
 };
 
 const AIRCRAFT = {
@@ -472,26 +472,26 @@ function TopBar({settings,setSettings}){
   const [showSettings,setShowSettings] = useState(false);
 
   const accent = settings.milGreen ? "#8fbc5a" : "#4FC3F7";
-  const btnBg = settings.milGreen ? "#1a2a0e" : settings.whiteMode ? "#e8f0f8" : "#0d1624";
-  const btnBorder = settings.milGreen ? "#2a4018" : settings.whiteMode ? "#c0d0e0" : "#1e2a3a";
+  const barBg = settings.milGreen ? "#0d1208" : settings.whiteMode ? "#e8f0f8" : "#07101e";
+  const barBorder = settings.milGreen ? "#2a4018" : settings.whiteMode ? "#c0d0e0" : "#1e2a3a";
+  const btnBg = settings.milGreen ? "#1a2a0e" : settings.whiteMode ? "#d8e8f4" : "#0d1624";
+  const btnBorder = settings.milGreen ? "#3a5020" : settings.whiteMode ? "#b0c8e0" : "#253a54";
   const text = settings.milGreen ? "#b8c9a0" : settings.whiteMode ? "#1a2535" : "#c8d6e5";
 
   return (
     <>
-      <div style={{position:"fixed",top:0,left:0,right:0,zIndex:100,display:"flex",justifyContent:"space-between",
-                   padding:"10px 14px",pointerEvents:"none"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",
+                   padding:"10px 14px",background:barBg,borderBottom:`1px solid ${barBorder}`}}>
         {/* Left: Lang flag */}
         <button onClick={()=>setShowLang(true)}
                 style={{background:btnBg,border:`1px solid ${btnBorder}`,color:text,
-                        fontSize:18,padding:"7px 12px",borderRadius:6,cursor:"pointer",
-                        pointerEvents:"all",letterSpacing:1}}>
+                        fontSize:18,padding:"7px 12px",borderRadius:6,cursor:"pointer",letterSpacing:1}}>
           {settings.lang==="en"?"🇬🇧":"🇫🇷"}
         </button>
         {/* Right: Settings cog */}
         <button onClick={()=>setShowSettings(true)}
                 style={{background:btnBg,border:`1px solid ${btnBorder}`,color:accent,
-                        fontSize:18,padding:"7px 12px",borderRadius:6,cursor:"pointer",
-                        pointerEvents:"all",letterSpacing:1}}>
+                        fontSize:18,padding:"7px 12px",borderRadius:6,cursor:"pointer",letterSpacing:1}}>
           ⚙
         </button>
       </div>
@@ -640,7 +640,7 @@ function CustomScreen({onBack,onSelect,customLists,setCustomLists,settings}){
   };
 
   return (
-    <div style={{minHeight:"100vh",background:bg,padding:"60px 14px 20px"}}>
+    <div style={{minHeight:"100vh",background:bg,padding:"16px 14px 20px"}}>
       <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
         <button onClick={onBack} style={{background:"transparent",border:`1px solid ${border}`,color:dim,
                                           padding:"5px 10px",borderRadius:4,cursor:"pointer",fontSize:11,letterSpacing:1}}>{t.back}</button>
@@ -810,7 +810,7 @@ function ChecklistScreen({aircraftId,onBack,settings,customLists}){
                     onClose={()=>setShowSpeeds(false)} settings={settings}/>
       )}
       {/* Header */}
-      <div style={{padding:"60px 16px 10px",borderBottom:`1px solid ${border}`,flexShrink:0}}>
+      <div style={{padding:"16px 16px 10px",borderBottom:`1px solid ${border}`,flexShrink:0}}>
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
           <button onClick={onBack} style={{background:"transparent",border:`1px solid ${border}`,color:textDim,
                                             padding:"8px 14px",borderRadius:5,cursor:"pointer",fontSize:14,letterSpacing:1}}>{t.back}</button>
@@ -940,7 +940,7 @@ function ClubScreen({onSelect,onCustom,settings}){
   const clubs = CAT_ORDER;
 
   return (
-    <div style={{minHeight:"100vh",background:bg,padding:"70px 16px 20px",display:"flex",flexDirection:"column"}}>
+    <div style={{minHeight:"100vh",background:bg,padding:"16px 16px 20px",display:"flex",flexDirection:"column"}}>
       {/* Title */}
       <div style={{textAlign:"center",marginBottom:24}}>
         <div style={{fontSize:40,marginBottom:8,filter:`drop-shadow(0 0 20px ${accent}aa)`,animation:"float 3s ease-in-out infinite"}}>✈</div>
@@ -1013,7 +1013,7 @@ function SelectionScreen({club,onSelect,onBack,settings}){
   const accent = settings.milGreen?"#8fbc5a":meta.color;
 
   return (
-    <div style={{minHeight:"100vh",background:bg,padding:"60px 14px 20px"}}>
+    <div style={{minHeight:"100vh",background:bg,padding:"16px 14px 20px"}}>
       {/* Club header */}
       <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
         <button onClick={onBack} style={{background:"transparent",border:`1px solid ${border}`,color:textDim,
@@ -1093,7 +1093,7 @@ function App(){
   const goChecklist = (id)=>{ setSelectedAc(id); setView("checklist"); };
 
   return (
-    <>
+    <div style={{display:"flex",flexDirection:"column",minHeight:"100vh"}}>
       <TopBar settings={settings} setSettings={setSettings}/>
       {view==="clubs" && (
         <ClubScreen
@@ -1130,7 +1130,7 @@ function App(){
           onSelect={(id)=>{ setSelectedAc(id); setView("checklist"); }}
         />
       )}
-    </>
+    </div>
   );
 }
 
