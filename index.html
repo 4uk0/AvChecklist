@@ -16,9 +16,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-    body{font-family:'Courier New',Courier,monospace;background:#0a0e14;color:#c8d6e5;min-height:100vh;overflow-x:hidden;text-transform:uppercase;letter-spacing:0.04em;}
+    body{font-family:'Optima','Optima Nova','Segoe UI',Candara,'Gill Sans',sans-serif;background:#f0f4f8;color:#1a2535;min-height:100vh;overflow-x:hidden;text-transform:uppercase;letter-spacing:0.04em;}
     /* Reset uppercase for input fields */
-    input,textarea{text-transform:none;letter-spacing:normal;}
+    input,textarea{text-transform:none;letter-spacing:normal;font-family:'Optima','Optima Nova','Segoe UI',Candara,'Gill Sans',sans-serif;}
     ::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-track{background:#0a0e14;} ::-webkit-scrollbar-thumb{background:#1e2a3a;}
     @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
@@ -282,86 +282,160 @@ const AIRCRAFT = {
   "hr200-gnno":{name:"Robin HR-200",registration:"F-GNNO",type:"Single Engine Piston",
     icon:"✈",category:"Paris Flight Academy",color:"#4FC3F7",
     description:"Touring version",version:"PAS-CL-FGNNO-EN V12 · June 2025",
-    speeds:[
-      {label:"Vr",desc:"Rotate",value:"55 kt"},
-      {label:"Vx",desc:"Max slope (flaps 10°)",value:"62 kt"},
-      {label:"Vy",desc:"Best climb (flaps up)",value:"73 kt"},
-      {label:"VS0",desc:"Stall (flaps down)",value:"52 kt"},
-      {label:"VS1",desc:"Stall (flaps up)",value:"56 kt"},
-      {label:"VFE",desc:"Max flaps extended",value:"96 kt"},
-      {label:"VMO",desc:"Max operating",value:"131 kt"},
-      {label:"VNE",desc:"Never exceed",value:"160 kt"},
-    ],
+    speedTable:{
+      unit:"kt",
+      rows:[
+        {label:"FLAPS 0°",   vs:59, v12:71, v13:77, v145:86},
+        {label:"FLAPS 10°",  vs:55, v12:66, v13:72, v145:80},
+        {label:"FLAPS 20°",  vs:52, v12:63, v13:68, v145:76},
+      ],
+      ops:[
+        {label:"Vr",   desc:"Rotate",               value:"55 kt"},
+        {label:"Vx",   desc:"Best angle (flaps 10°)",value:"62 kt"},
+        {label:"Vy",   desc:"Best rate (flaps 10°)", value:"73 kt"},
+        {label:"Vfmax",desc:"Max flap extend speed", value:"73 kt"},
+        {label:"VFE",  desc:"Max flaps extended",    value:"96 kt"},
+        {label:"Va",   desc:"Manoeuvring speed",     value:"131 kt"},
+      ],
+      limits:[
+        {label:"VNE", value:"160 kt"},
+        {label:"VNO", value:"131 kt"},
+        {label:"VFE", value:"96 kt"},
+        {label:"XWIND MAX", value:"18 kt"},
+      ]
+    },
     checklists:{en:HR200_EN,fr:HR200_FR}},
+
   "hr200-hpfa":{name:"Robin HR-200",registration:"F-HPFA",type:"Single Engine Piston",
     icon:"✈",category:"Paris Flight Academy",color:"#81C784",
     description:"Training version",version:"PAS-CL-FHPFA-FR V12 · Juin 2025",
-    speeds:[
-      {label:"Vr",desc:"Rotation",value:"55 kt"},
-      {label:"Vx",desc:"Pente max (volets 10°)",value:"62 kt"},
-      {label:"Vy",desc:"Montée en lisse",value:"73 kt"},
-      {label:"VS0",desc:"Décrochage (volets sortis)",value:"52 kt"},
-      {label:"VS1",desc:"Décrochage (lisse)",value:"56 kt"},
-      {label:"VFE",desc:"Volets max",value:"96 kt"},
-      {label:"VMO",desc:"Max opérationnel",value:"131 kt"},
-      {label:"VNE",desc:"À ne jamais dépasser",value:"160 kt"},
-    ],
+    speedTable:{
+      unit:"kt",
+      rows:[
+        {label:"VOLETS 0°",   vs:59, v12:71, v13:77, v145:86},
+        {label:"VOLETS 10°",  vs:55, v12:66, v13:72, v145:80},
+        {label:"VOLETS 20°",  vs:52, v12:63, v13:68, v145:76},
+      ],
+      ops:[
+        {label:"Vr",   desc:"Rotation",                  value:"55 kt"},
+        {label:"Vx",   desc:"Pente max (volets 10°)",    value:"62 kt"},
+        {label:"Vy",   desc:"Montée (volets 10°)",       value:"73 kt"},
+        {label:"Vfmax",desc:"Vitesse max sortie volets", value:"73 kt"},
+        {label:"VFE",  desc:"Volets sortis max",         value:"96 kt"},
+        {label:"Va",   desc:"Vitesse de manoeuvre",      value:"131 kt"},
+      ],
+      limits:[
+        {label:"VNE", value:"160 kt"},
+        {label:"VNO", value:"131 kt"},
+        {label:"VFE", value:"96 kt"},
+        {label:"VENT DE TRAVERS MAX", value:"18 kt"},
+      ]
+    },
     checklists:{en:HR200_EN,fr:HR200_FR}},
+
   "hr200-generic":{name:"Robin HR-200",registration:"Generic",type:"Single Engine Piston",
     icon:"✈",category:"Aéro Club Paul Tissandier",color:"#CE93D8",
     description:"Generic HR-200",version:"Révision mai 2016",
-    speeds:[
-      {label:"Vr",desc:"Rotate",value:"55 kt"},
-      {label:"Vx",desc:"Max slope (flaps 10°)",value:"62 kt"},
-      {label:"Vy",desc:"Best climb (flaps up)",value:"73 kt"},
-      {label:"VS0",desc:"Stall (flaps down)",value:"52 kt"},
-      {label:"VS1",desc:"Stall (flaps up)",value:"56 kt"},
-      {label:"VFE",desc:"Max flaps extended",value:"96 kt"},
-      {label:"VMO",desc:"Max operating",value:"131 kt"},
-      {label:"VNE",desc:"Never exceed",value:"160 kt"},
-    ],
+    speedTable:{
+      unit:"kt",
+      rows:[
+        {label:"FLAPS 0°",   vs:59, v12:71, v13:77, v145:86},
+        {label:"FLAPS 10°",  vs:55, v12:66, v13:72, v145:80},
+        {label:"FLAPS 20°",  vs:52, v12:63, v13:68, v145:76},
+      ],
+      ops:[
+        {label:"Vr",   desc:"Rotate",               value:"55 kt"},
+        {label:"Vx",   desc:"Best angle (flaps 10°)",value:"62 kt"},
+        {label:"Vy",   desc:"Best rate (flaps 10°)", value:"73 kt"},
+        {label:"VFE",  desc:"Max flaps extended",    value:"96 kt"},
+        {label:"VMO",  desc:"Max operating speed",   value:"131 kt"},
+        {label:"VNE",  desc:"Never exceed",          value:"160 kt"},
+      ],
+      limits:[
+        {label:"VNE", value:"160 kt"},
+        {label:"VMO", value:"131 kt"},
+        {label:"VFE", value:"96 kt"},
+        {label:"XWIND MAX", value:"18 kt"},
+      ]
+    },
     checklists:{en:HR200_GENERIC_EN,fr:HR200_GENERIC_FR}},
+
   "dr460-gsgd":{name:"Robin DR460",registration:"F-GSGD",type:"Single Engine Piston",
     icon:"✈",category:"Aéro Club Paul Tissandier",color:"#FFB74D",
     description:"GTN750 equipped",version:"Révision mai 2016",
-    speeds:[
-      {label:"Vr",desc:"Rotate",value:"⚠ confirm POH"},
-      {label:"Vx",desc:"Best angle climb",value:"⚠ confirm POH"},
-      {label:"Vy",desc:"Best rate climb",value:"80 kt"},
-      {label:"VS0",desc:"Stall (flaps down)",value:"50 kt"},
-      {label:"VS1",desc:"Stall (flaps up)",value:"55 kt"},
-      {label:"VFE",desc:"Max flaps extended",value:"92 kt"},
-      {label:"VMO",desc:"Max operating",value:"140 kt"},
-      {label:"VNE",desc:"Never exceed",value:"166 kt"},
-    ],
+    speedTable:{
+      unit:"kt",
+      rows:[
+        {label:"VOLETS 0°",     vs:55, v12:66, v13:72, v145:80},
+        {label:"VOLETS CRAN 1", vs:53, v12:64, v13:69, v145:77},
+        {label:"VOLETS CRAN 2", vs:50, v12:60, v13:65, v145:73},
+      ],
+      ops:[
+        {label:"Vr",  desc:"Rotate",              value:"⚠ confirm POH"},
+        {label:"Vx",  desc:"Best angle climb",    value:"⚠ confirm POH"},
+        {label:"Vy",  desc:"Best rate climb",     value:"80 kt"},
+        {label:"VFE", desc:"Max flaps extended",  value:"92 kt"},
+        {label:"VMO", desc:"Max operating speed", value:"140 kt"},
+        {label:"VNE", desc:"Never exceed",        value:"166 kt"},
+      ],
+      limits:[
+        {label:"VNE", value:"166 kt"},
+        {label:"VMO", value:"140 kt"},
+        {label:"VFE", value:"92 kt"},
+        {label:"XWIND MAX", value:"22 kt"},
+      ]
+    },
     checklists:{en:DR460_EN,fr:DR460_FR}},
+
   "dr400-harv":{name:"Robin DR400 Ecoflyer",registration:"F-HARV",type:"Single Engine Turbine",
     icon:"⚡",category:"Aéro Club Paul Tissandier",color:"#EF5350",
     description:"JET-A1 / FADEC",version:"Révision mai 2016",
-    speeds:[
-      {label:"Vr",desc:"Rotate",value:"⚠ confirm POH"},
-      {label:"Vx",desc:"Best angle climb",value:"⚠ confirm POH"},
-      {label:"Vy",desc:"Best rate climb",value:"80 kt"},
-      {label:"VS0",desc:"Stall (flaps down)",value:"47 kt"},
-      {label:"VS1",desc:"Stall (flaps up)",value:"53 kt"},
-      {label:"VFE",desc:"Max flaps extended",value:"92 kt"},
-      {label:"VMO",desc:"Max operating",value:"140 kt"},
-      {label:"VNE",desc:"Never exceed",value:"146 kt"},
-    ],
+    speedTable:{
+      unit:"kt",
+      rows:[
+        {label:"VOLETS 0°",     vs:53, v12:64, v13:69, v145:77},
+        {label:"VOLETS CRAN 1", vs:50, v12:60, v13:65, v145:73},
+        {label:"VOLETS CRAN 2", vs:47, v12:56, v13:61, v145:68},
+      ],
+      ops:[
+        {label:"Vr",  desc:"Rotate",              value:"⚠ confirm POH"},
+        {label:"Vx",  desc:"Best angle climb",    value:"⚠ confirm POH"},
+        {label:"Vy",  desc:"Best rate climb",     value:"80 kt"},
+        {label:"VFE", desc:"Max flaps extended",  value:"92 kt"},
+        {label:"VMO", desc:"Max operating speed", value:"140 kt"},
+        {label:"VNE", desc:"Never exceed",        value:"146 kt"},
+      ],
+      limits:[
+        {label:"VNE", value:"146 kt"},
+        {label:"VMO", value:"140 kt"},
+        {label:"VFE", value:"92 kt"},
+        {label:"XWIND MAX", value:"22 kt"},
+      ]
+    },
     checklists:{en:DR400_EN,fr:DR400_FR}},
+
   "j3cub-bfqn":{name:"Piper J3 Cub",registration:"F-BFQN",type:"Single Engine Piston",
     icon:"🛩",category:"Aéro Club Paul Tissandier",color:"#FFD54F",
     description:"Taildragger · Vintage",version:"Révision juillet 2016",
-    speeds:[
-      {label:"Vr",desc:"Rotate",value:"⚠ confirm POH"},
-      {label:"Vx",desc:"Best angle climb",value:"⚠ confirm POH"},
-      {label:"Vy",desc:"Best rate climb",value:"55 mph"},
-      {label:"VS0",desc:"Stall (flaps down)",value:"40 mph"},
-      {label:"VS1",desc:"Stall (flaps up)",value:"40 mph"},
-      {label:"VFE",desc:"Max flaps extended",value:"55 mph"},
-      {label:"VMO",desc:"Max operating",value:"92 mph"},
-      {label:"VNE",desc:"Never exceed",value:"122 mph"},
-    ],
+    speedTable:{
+      unit:"mph",
+      rows:[
+        {label:"NO FLAPS", vs:40, v12:48, v13:52, v145:58},
+      ],
+      ops:[
+        {label:"Vr",    desc:"Rotate",              value:"⚠ confirm POH"},
+        {label:"Vx",    desc:"Best angle climb",    value:"55 mph"},
+        {label:"Vy",    desc:"Best rate climb",     value:"60 mph"},
+        {label:"Vfmax", desc:"Best glide speed",    value:"60 mph"},
+        {label:"VMO",   desc:"Max operating speed", value:"92 mph"},
+        {label:"VNE",   desc:"Never exceed",        value:"122 mph"},
+      ],
+      limits:[
+        {label:"VNE", value:"122 mph"},
+        {label:"VMO", value:"92 mph"},
+        {label:"XWIND MAX", value:"15 kt"},
+      ]
+    },
     checklists:{en:J3CUB_EN,fr:J3CUB_FR}},
 };
 
@@ -691,41 +765,100 @@ function CustomScreen({onBack,onSelect,customLists,setCustomLists,settings}){
 }
 
 // ── SPEED SHEET ────────────────────────────────────────────────────────────
-function SpeedSheet({speeds,color,name,registration,onClose,settings}){
+function SpeedSheet({speedTable,color,name,registration,onClose,settings}){
   const bg = settings.milGreen?"#141d0a":settings.whiteMode?"#fff":"#0d1624";
   const border = settings.milGreen?"#2a4018":settings.whiteMode?"#d0dde8":"#1e2a3a";
   const text = settings.milGreen?"#b8c9a0":settings.whiteMode?"#1a2535":"#c8d6e5";
   const dim = settings.milGreen?"#5a7040":settings.whiteMode?"#8899aa":"#3a5070";
+  const hdr = settings.milGreen?"#0d1208":settings.whiteMode?"#e8f0f8":"#07101e";
+  const unit = speedTable.unit||"kt";
+
+  // Table header style
+  const TH = {padding:"7px 10px",fontSize:11,fontWeight:"bold",letterSpacing:2,color,textAlign:"center",borderBottom:`1px solid ${color}44`,borderRight:`1px solid ${border}`};
+  const TD = (highlight)=>({padding:"7px 10px",fontSize:highlight?14:13,fontWeight:highlight?"bold":"normal",color:highlight?color:text,textAlign:"center",borderRight:`1px solid ${border}`,borderBottom:`1px solid ${border}`});
+  const TDlabel = {padding:"7px 12px",fontSize:11,letterSpacing:1,color:text,fontWeight:"bold",borderRight:`1px solid ${color}44`,borderBottom:`1px solid ${border}`,background:`${color}09`};
+
   return (
     <div style={{position:"fixed",inset:0,zIndex:500,display:"flex",flexDirection:"column",justifyContent:"flex-end"}}
          onClick={onClose}>
       <div className="slide-up" onClick={e=>e.stopPropagation()}
-           style={{background:bg,borderTop:`2px solid ${color}`,padding:"20px 20px 36px",
-                   boxShadow:"0 -8px 40px #0008",maxHeight:"80vh",overflowY:"auto"}}>
+           style={{background:bg,borderTop:`3px solid ${color}`,padding:"20px 16px 36px",
+                   boxShadow:"0 -8px 40px #0008",maxHeight:"88vh",overflowY:"auto"}}>
+
+        {/* Header */}
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16}}>
           <div>
-            <div style={{fontSize:10,letterSpacing:3,color,marginBottom:2}}>SPEEDS · VITESSES</div>
-            <div style={{fontSize:16,fontWeight:"bold",letterSpacing:1.5,color:text}}>{name}
+            <div style={{fontSize:10,letterSpacing:3,color,marginBottom:3}}>✈ SPEEDS · VITESSES</div>
+            <div style={{fontSize:16,fontWeight:"bold",letterSpacing:1.5,color:text}}>
+              {name}
               {registration&&<span style={{fontSize:11,marginLeft:8,padding:"2px 7px",background:`${color}22`,
                 border:`1px solid ${color}44`,borderRadius:3,color,letterSpacing:1}}>{registration}</span>}
             </div>
           </div>
           <button onClick={onClose} style={{background:"transparent",border:"none",color:text,fontSize:22,cursor:"pointer",padding:"4px 8px"}}>✕</button>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
-          {speeds.map(({label,desc,value})=>{
-            const isWarn = value.startsWith("⚠");
+
+        {/* Characteristic speeds table */}
+        <div style={{fontSize:10,letterSpacing:3,color,marginBottom:8}}>CHARACTERISTIC SPEEDS ({unit})</div>
+        <div style={{overflowX:"auto",marginBottom:20}}>
+          <table style={{width:"100%",borderCollapse:"collapse",border:`1px solid ${color}44`,borderRadius:6,overflow:"hidden",fontSize:12}}>
+            <thead>
+              <tr style={{background:hdr}}>
+                <th style={{...TH,textAlign:"left",minWidth:90}}> </th>
+                <th style={{...TH}}>VS</th>
+                <th style={{...TH,color:color+"cc"}}>1.2 VS</th>
+                <th style={{...TH,color:color+"cc"}}>1.3 VS</th>
+                <th style={{...TH,color:color+"cc",borderRight:"none"}}>1.45 VS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {speedTable.rows.map((row,i)=>(
+                <tr key={i} style={{background:i%2===0?`${color}06`:"transparent"}}>
+                  <td style={TDlabel}>{row.label}</td>
+                  <td style={TD(true)}>{row.vs}</td>
+                  <td style={TD(false)}>{row.v12}</td>
+                  <td style={TD(false)}>{row.v13}</td>
+                  <td style={{...TD(false),borderRight:"none"}}>{row.v145}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Operational speeds */}
+        <div style={{fontSize:10,letterSpacing:3,color,marginBottom:8}}>OPERATIONAL SPEEDS</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:6,marginBottom:16}}>
+          {speedTable.ops.map(({label,desc,value})=>{
+            const isWarn = String(value).startsWith("⚠");
             return (
-              <div key={label} style={{background:`${color}0d`,border:`1px solid ${isWarn?"#FF574422":`${color}33`}`,borderRadius:6,padding:"10px 12px"}}>
-                <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:3}}>
-                  <span style={{fontSize:16,fontWeight:"bold",color:isWarn?"#FF5744":color,letterSpacing:1}}>{label}</span>
-                  <span style={{fontSize:isWarn?10:17,fontWeight:"bold",color:isWarn?"#FF574488":text,letterSpacing:1}}>{isWarn?"N/A":value}</span>
+              <div key={label} style={{background:isWarn?"#FF574409":`${color}0d`,
+                border:`1px solid ${isWarn?"#FF574433":`${color}33`}`,borderRadius:5,padding:"8px 10px"}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:2}}>
+                  <span style={{fontSize:14,fontWeight:"bold",color:isWarn?"#FF5744":color,letterSpacing:1}}>{label}</span>
+                  <span style={{fontSize:isWarn?9:14,fontWeight:"bold",color:isWarn?"#FF574488":text}}>{isWarn?"POH":value}</span>
                 </div>
-                <div style={{fontSize:10,color:isWarn?"#FF574466":dim,letterSpacing:0.5}}>{isWarn?"Verify in POH":desc}</div>
+                <div style={{fontSize:9,color:isWarn?"#FF574466":dim,letterSpacing:0.5}}>{isWarn?"VERIFY IN POH":desc}</div>
               </div>
             );
           })}
         </div>
+
+        {/* Limits bar */}
+        {speedTable.limits&&(
+          <div style={{borderTop:`1px solid ${border}`,paddingTop:12}}>
+            <div style={{fontSize:10,letterSpacing:3,color,marginBottom:8}}>LIMITS</div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:6}}>
+              {speedTable.limits.map(({label,value})=>(
+                <div key={label} style={{padding:"5px 12px",background:`${color}11`,border:`1px solid ${color}44`,borderRadius:4,
+                      display:"flex",gap:8,alignItems:"center"}}>
+                  <span style={{fontSize:11,color,fontWeight:"bold",letterSpacing:1}}>{label}</span>
+                  <span style={{fontSize:13,fontWeight:"bold",color:text,letterSpacing:1}}>{value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   );
@@ -805,8 +938,8 @@ function ChecklistScreen({aircraftId,onBack,settings,customLists}){
 
   return (
     <div style={{minHeight:"100vh",background:bg,display:"flex",flexDirection:"column"}}>
-      {showSpeeds&&!isCustom&&ac.speeds&&(
-        <SpeedSheet speeds={ac.speeds} color={color} name={name} registration={reg}
+      {showSpeeds&&!isCustom&&ac.speedTable&&(
+        <SpeedSheet speedTable={ac.speedTable} color={color} name={name} registration={reg}
                     onClose={()=>setShowSpeeds(false)} settings={settings}/>
       )}
       {/* Header */}
@@ -823,7 +956,7 @@ function ChecklistScreen({aircraftId,onBack,settings,customLists}){
             <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
               <div style={{fontSize:16,fontWeight:"bold",letterSpacing:1.5,color:text}}>{name}</div>
               {reg&&<div style={{fontSize:11,padding:"2px 7px",background:`${color}22`,border:`1px solid ${color}44`,borderRadius:3,color,letterSpacing:1}}>{reg}</div>}
-              {!isCustom&&ac.speeds&&(
+              {!isCustom&&ac.speedTable&&(
                 <button onClick={()=>setShowSpeeds(true)}
                   style={{background:`${color}18`,border:`1px solid ${color}66`,color:color,
                           fontSize:11,padding:"3px 10px",borderRadius:4,cursor:"pointer",letterSpacing:1,flexShrink:0,fontFamily:"Courier New"}}>
@@ -1079,7 +1212,7 @@ function CustomChecklistScreen({checklistId,onBack,settings,customLists}){
 
 // ── APP ────────────────────────────────────────────────────────────────────
 function App(){
-  const [settings,setSettings] = useState({whiteMode:false,milGreen:false,autoAdvance:false,floatDone:false,lang:"en"});
+  const [settings,setSettings] = useState({whiteMode:true,milGreen:false,autoAdvance:true,floatDone:true,lang:"en"});
   const [view,setView] = useState("clubs"); // clubs | club | checklist | custom
   const [selectedClub,setSelectedClub] = useState(null);
   const [selectedAc,setSelectedAc] = useState(null);
