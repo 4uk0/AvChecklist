@@ -278,6 +278,27 @@ const J3CUB_FR = {
   "ARRÊT MOTEUR":["Freins – AUX PIEDS","Refroidissement moteur – 1000 RPM / 1 MINUTE","Radio / Radionav – CLÔTURE / OFF","Moteur au ralenti – MANETTE FERMÉE","Magnétos – ESSAIS COUPURE puis OFF / CLÉS RETIRÉES","Mixture – ÉTOUFFOIR","Coupe-circuit essence – TIRÉ","Batterie – OFF","Horamètre arrivée – RELEVÉ","Nettoyage de l'avion – EFFECTUÉ"]
 };
 
+// ── PA-28 CHECKLIST ────────────────────────────────────────────────────────
+const PA28_EN = {
+  "PRE-FLIGHT (INSIDE)":["Documents – ONBOARD","Baggage – FASTENED","ELT – ARMED","Extinguisher – ONBOARD & ATTACHED","Fireproof glove and bag – ONBOARD","Flight controls – TESTED","Propeller area – CLEAR","Battery – ON","Circuit breakers – IN","Anemometer circuit – PURGED","Fuel gauge – CHECKED","Fuel pump – ON","Fuel pressure – CHECKED","Fuel pump – OFF","Flaps – TESTED, EXTENDED & CHECKED","Landing lights & Nav lights – CHECKED (ON then OFF)","Stall warning horn – CHECKED","Battery – OFF","Windscreen canopy – CLEAN"],
+  "PRE-FLIGHT (OUTSIDE)":["Fuel purge (1st flight of day) – DONE (3 POINTS, NO LEAK)","Pitot cover – REMOVED","Oil level – CHECKED (6 MIN, COLD ENGINE: BETWEEN 6 AND 8)","Antennas – IN PLACE & GOOD CONDITION","Left fuselage – STATE CHECKED","Horizontal stabilizer & clearance (left) – CHECKED & GOOD CONDITION","Hinges & bolts (left & right) – IN PLACE & CHECKED","Rudder – CHECKED & GOOD CONDITION","Horizontal stabilizer & clearance (right) – CHECKED & GOOD CONDITION","Right fuselage – STATE CHECKED","Flap and housing – STATE CHECKED","Flap slack – NON SIGNIFICANT","Aileron, deflection and hinges – CHECKED","Right wing tip, Nav light – GOOD CONDITION","Right wing upper/lower surface – STATE CHECKED","Right access hatch – CLOSED","Right leading edge – STATE CHECKED","Right main landing gear (fairing & tyre) – STATE CHECKED","Right fuel cap – CLOSED","Cowling fasteners – IN PLACE & CHECKED","Propeller cone – STATE CHECKED","Propeller – STATE CHECKED","Air inlet – UNOBSTRUCTED","Alternator belt – TENSION CHECKED","Exhaust pipes – STATE CHECKED","Nose wheel (fairing & tyre) – STATE CHECKED","Cooling fasteners – IN PLACE & CHECKED","Pitot / Static / Stall warning – UNOBSTRUCTED","Left fuel cap – CLOSED","Left main landing gear (fairing & tyre) – STATE CHECKED","Left leading edge – STATE CHECKED","Left wing tip, Nav light – GOOD CONDITION","Left wing upper/lower surface – STATE CHECKED","Left access hatch – CLOSED","Aileron, deflection and hinges – CHECKED","Flap and housing – STATE CHECKED","Flap slack – NON SIGNIFICANT"],
+  "BEFORE START":["Tow bar – REMOVED","Pitot cover – IN COCKPIT","ELT – ARMED","Seats – ADJUSTED","Headset – REMOVED","Belts – UNFASTENED","Doors – CLOSED x2","Park brake – SET","Hour meter – NOTED","Air vent and heating – CLOSED","All electrical loads – OFF","Beacon – ON","Fuel selector – LESS FULL TANK","Carburator heat – OFF"],
+  "ENGINE START":["Propeller area – CLEARED","Battery – ON","Mixture – FULL RICH","Keys – SET","Fuel pump – ON","Injections with throttle: 1-2 if warm / 4 if cold engine","if OAT<15°C add 1 injection","Throttle – 1 INCH IN","NOBODY AHEAD – HAND ON THROTTLE – TOES ON BRAKE","START – Oil pressure green within 10 seconds","Engine speed – 1200 RPM","IF FLOODED: Fuel pump OFF / Mixture CUTOFF / Throttle FULL FORWARD","When engine fires: Mixture FULL RICH + throttle to 1200 RPM"],
+  "AFTER START":["Alternator – ON","Electrical load – CHECKED","Fuel pump – OFF","Fuel pressure – CHECKED","Master radio – ON","Headset – PLUGGED","Belts – FASTENED","Flaps – RETRACTED & CHECKED","Radio and GPS – ON VOLUME SET","Transponder – GND","Transponder – 7000","ATIS (if available) – LISTENED","Useful frequencies – DISPLAYED","Altimeter – SET TO QNH","Barometric error – NOTED","Directional gyro – SET","Tracker and Action Cam (if used) – SET","Taxi briefing with VAC chart","Navigation light – ON","Taxi light – ON","BLOC OFF TIME – NOTED"],
+  "TAXI":["Compass and directional gyro – CHECKED","Turn and bank indicators – CHECKED","Altimeter and artificial horizon – STABLE"],
+  "ENGINE RUN-UP":["Park brake – SET","Landing light – OFF","Fuel tank – MOST FULL","Engine instruments – CHECKED GREEN","Power – 1800 RPM","Gyro suction – CHECKED GREEN","MAGNETOS CHECK: -175 RPM max each / max gap 50 RPM between them","CARBURATOR HEAT TEST (5 sec): loss 20 to 200 RPM","IDLE CHECK: 600-800 RPM and stable","Power – 1200 RPM"],
+  "BEFORE TAKEOFF":["Flight controls – FREE","Magnetos – BOTH","Mixture – FULL RICH","Fuel selector – MOST FULL TANK","Carburator heat – OFF","Trim – SET FOR TAKEOFF","Directional gyro – SET","Altimeter – SET","Flaps – 10°/25° CHECKED","Fuel pump – ON","Alarm lights – TESTED","Transponder – CODE VERIFIED OR 7000","Transponder – ALT","Harness belts – FASTENED","Doors – LOCKED x2","Taxi light – ON","BEFORE TAKE-OFF BRIEFING (DEPARTURE AND SAFETY)","RADIO MESSAGE"],
+  "TAKEOFF":["After lining up: DG reset to QFU / Engine instruments checked / Transponder ALT / Battery+Alternator+Pump ON / Flaps 10° checked","Throttle >= 2300 RPM – Power set","No alarm – Continue","Speed indicator – Speed increasing","Vi Rotate – 65 kt","Vi Max slope flaps 10° – 65 kt","Vi Flaps 10° climb – 75 kt","Vi Flaps UP climb – 85 kt"],
+  "CLIMB (300ft AGL)":["Speed – CHECKED","Flaps – RETRACTED CHECKED","Fuel pump – OFF","Carburator heat – OFF","Engine instruments – CHECKED","Radio message"],
+  "DESCENT":["Mixture – FULL RICH","Fuel – CHECKED","Gyro – RESET","Altimeter – AT QNH","Carburator heat – ON"],
+  "DOWNWIND":["Power – 2100 RPM","Speed – 85 kt","Landing light – ON","Flaps (IAS in white arc) – 10° EXTENDED CHECKED","Mixture – FULL RICH","Fuel pump – ON","Carburator heat – ON","Radio message"],
+  "BASE LEG":["Power – 1700 RPM","Vz – -500 ft/min","Vi – 80 kt"],
+  "FINAL":["Flaps – 25°/40° EXTENDED CHECKED","Vi – 65 kt + Kve","Fuel pump – ON","Carburator heat – OFF"],
+  "RUNWAY VACATED":["Flaps – RETRACTED VERIFIED","Fuel pump – OFF","Carburator heat – OFF"],
+  "ENGINE STOP":["Park brake – SET","Taxi light – OFF","Navigation light – OFF","Transponder – 7000 then OFF","Radio / GPS – OFF","Alternator – OFF","Power – AT IDLE","Magnetos check – DONE","Power – 1200 RPM","Mixture – CUTOFF","Keys – OUT","Battery – OFF","Power – AT IDLE","Beacon – ON","Hour meter – NOTED","BLOC ON TIME – NOTED","Tracker and Action Cam (if used) – STOPPED","Flight plan (if necessary) – CLOSED"],
+  "EMERGENCIES":["⚠ ENGINE FIRE ON GROUND: Starter ENGAGED / Mixture FULL POOR / Throttle FULL / Fuel pump OFF / Fuel selector OFF — If persists: ATC advised / Magnetos OFF / Battery OFF / Evacuate","⚠ ENGINE FAILURE T/O ROLL: Throttle IDLE / Brakes as required / Mixture FULL POOR / Magnetos OFF / Alternator OFF / Battery OFF — If runway insufficient: Fuel selector OFF","⚠ ENGINE FAILURE AFTER T/O: Speed 76 kt / Mixture FULL POOR / Fuel selector OFF / Magnetos OFF","⚠ ENGINE FAILURE IN FLIGHT: Glide 76 kt / Flaps retracted / Fuel pump ON / Fuel selector R or L / Mixture FULL RICH / Throttle 1 inch / Magnetos BOTH / Starter if no restart","⚠ OFF-FIELD PRECAUTIONARY (ENGINE ON): Flaps 10° / Speed 80 kt / Confirm field length >10s / Flaps 40° / Approach 65 kt — Before touchdown: Fuel+Magnetos OFF / Battery OFF / Door OPEN","⚠ ENGINE FIRE IN FLIGHT: Fuel selector OFF / Throttle FULL until stops / Mixture LEAN / Fuel pump OFF / Heating+ventilation CLOSED / ATC advised / Off-field landing / NEVER RESTART","⚠ ENGINE VIBRATIONS: Priming pump OFF — Carb ice: ICING checklist — Bad mixture: CHECK — Fuel contamination: Fuel pressure CHECK + Pump ON — Ignition: Magnetos L/R/BOTH best position","⚠ OIL PRESSURE LOW: Oil temp CHECKED — High temp: reduce power / land nearest — Else: off-field precautionary landing","⚠ ICING: Carb heat PULLED / Engine power UP / Pitot heat ON / Cockpit heat ON / Defrost / Adjust altitude or U-turn — Speed with ice on leading edge: 70 kt","⚠ ALTERNATOR FAILURE: Alternator OFF then ON — If persists: Alternator OFF / Non-essential loads OFF / Land ASAP","⚠ ALTERNATOR OVERLOAD: Battery OFF — If A decreases: Battery ON — If persists: Battery OFF / Non-essential OFF / Land ASAP","⚠ INVOLUNTARY SPIN: Throttle IDLE / Rudder MAX OPPOSITE / Ailerons NEUTRAL — When rotation stops: Rudder NEUTRAL / Smooth recovery","⚠ ELEVATOR FAILURE: Maintain level with trim & throttle / Flaps retracted / Speed 80 kt / No more trim / Control descent with throttle","⚠ OFF-FIELD FORCED LANDING (ENGINE FAILURE): Belts fastened / Fuel pump OFF / Mixture LEAN / Throttle IDLE / Magnetos OFF / Fuel selector OFF / Alternator OFF / MAYDAY 121.5 / Transponder 7700 / ELT ON — On final: Flaps fully extended / Battery OFF / Door UNLOCKED","⚠ COCKPIT FIRE: Ventilation CLOSED / Alternator OFF / Battery OFF / Battery CB PULLED / Alternator CB PULLED / Land quickly"]
+};
+
 const AIRCRAFT = {
   "hr200-gnno":{name:"Robin HR-200",registration:"F-GNNO",type:"Single Engine Piston",
     icon:"✈",category:"Paris Flight Academy",color:"#4FC3F7",
@@ -437,6 +458,32 @@ const AIRCRAFT = {
       ]
     },
     checklists:{en:J3CUB_EN,fr:J3CUB_FR}},
+
+  "pa28-gcjk":{name:"Piper PA-28",registration:"F-GCJK",type:"Single Engine Piston",
+    icon:"✈",category:"Paris Flight Academy",color:"#FF7043",
+    description:"Cherokee · 4-seat",version:"PAS-CL-FGCJK-EN V5 · June 2025",
+    speedTable:{
+      unit:"kt",
+      rows:[
+        {label:"FLAPS 0°",   vs:55, v12:66, v13:72, v145:80},
+        {label:"FLAPS 10°",  vs:52, v12:62, v13:68, v145:75},
+        {label:"FLAPS 25°",  vs:49, v12:59, v13:64, v145:71},
+      ],
+      ops:[
+        {label:"Vr",    desc:"Rotate",                 value:"65 kt"},
+        {label:"Vx",    desc:"Best angle (flaps 10°)", value:"65 kt"},
+        {label:"Vy",    desc:"Best rate (flaps 10°)",  value:"75 kt"},
+        {label:"Vglide",desc:"Best glide speed",       value:"76 kt"},
+        {label:"VFE",   desc:"Max flaps extended",     value:"⚠ confirm POH"},
+        {label:"VNE",   desc:"Never exceed",           value:"⚠ confirm POH"},
+      ],
+      limits:[
+        {label:"Vr",     value:"65 kt"},
+        {label:"Vglide", value:"76 kt"},
+        {label:"XWIND MAX", value:"⚠ confirm POH"},
+      ]
+    },
+    checklists:{en:PA28_EN,fr:PA28_EN}},
 };
 
 const CLUB_META = {
