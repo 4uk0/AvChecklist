@@ -1,4 +1,4 @@
-const CACHE = 'flight-checklist-v4';
+const CACHE = 'flight-checklist-v5';
 
 // All files to cache for offline use
 const ASSETS = [
