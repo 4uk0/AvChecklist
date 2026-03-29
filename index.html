@@ -943,29 +943,43 @@ function ChecklistScreen({aircraftId,onBack,settings,customLists}){
   const items = allPhases[activePhase]||[];
   const accent = isCustom ? accentSys : phaseColor(activePhase);
 
+  const [confirmed,setConfirmed] = useState({});
+
   const toggle = (phase,idx)=>{
     const key = `${phase}-${idx}`;
     const item = (allPhases[phase]||[])[idx];
     if(item&&item.startsWith("⚠"))return;
     const now = !checked[key];
-    setChecked(c=>({...c,[key]:now}));
     if(now){
+      // Step 1: fill the checkbox immediately (completing = ticking)
       setCompleting(c=>({...c,[key]:true}));
-      setTimeout(()=>setCompleting(c=>{const n={...c};delete n[key];return n;}),600);
-    }
-    if(settings.autoAdvance&&now){
-      const its = allPhases[phase]||[];
-      const allDone = its.every((_,i)=>i===idx||checked[`${phase}-${i}`]||_?.startsWith("⚠"));
-      if(allDone){
-        const next = phases[phases.indexOf(phase)+1];
-        if(next)setTimeout(()=>setActivePhase(next),800);
+      // Step 2: after short delay, confirm done (text strikethrough, row green)
+      setTimeout(()=>{
+        setChecked(c=>({...c,[key]:true}));
+        setConfirmed(c=>({...c,[key]:true}));
+        setCompleting(c=>{const n={...c};delete n[key];return n;});
+      },250);
+      // Auto-advance after confirmation
+      if(settings.autoAdvance){
+        setTimeout(()=>{
+          const its = allPhases[phase]||[];
+          const allDoneNow = its.every((_,i)=>i===idx||checked[`${phase}-${i}`]||_?.startsWith("⚠"));
+          if(allDoneNow){
+            const next = phases[phases.indexOf(phase)+1];
+            if(next)setTimeout(()=>setActivePhase(next),400);
+          }
+        },300);
       }
+    } else {
+      setChecked(c=>({...c,[key]:false}));
+      setConfirmed(c=>{const n={...c};delete n[key];return n;});
     }
   };
 
   const resetPhase = ()=>{
     const keys = items.map((_,i)=>`${activePhase}-${i}`);
     setChecked(c=>{const n={...c};keys.forEach(k=>delete n[k]);return n;});
+    setConfirmed(c=>{const n={...c};keys.forEach(k=>delete n[k]);return n;});
   };
 
   const doneCount = items.filter((_,i)=>checked[`${activePhase}-${i}`]).length;
@@ -992,8 +1006,16 @@ function ChecklistScreen({aircraftId,onBack,settings,customLists}){
       {/* Header */}
       <div style={{padding:"16px 16px 10px",borderBottom:`1px solid ${border}`,flexShrink:0}}>
         <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:10}}>
-          <button onClick={onBack} style={{background:"transparent",border:`1px solid ${border}`,color:textDim,
-                                            padding:"8px 14px",borderRadius:5,cursor:"pointer",fontSize:14,letterSpacing:1}}>{t.back}</button>
+          {/* Left: back + reset stacked */}
+          <div style={{display:"flex",flexDirection:"column",gap:6,flexShrink:0}}>
+            <button onClick={onBack} style={{background:"transparent",border:`1px solid ${border}`,color:textDim,
+                                              padding:"8px 14px",borderRadius:5,cursor:"pointer",fontSize:14,letterSpacing:1}}>{t.back}</button>
+            <button onClick={()=>{setChecked({});setCompleting({});setConfirmed({});}}
+              style={{background:"transparent",border:`1px solid ${color}66`,color:color,
+                      fontSize:11,padding:"5px 10px",borderRadius:4,cursor:"pointer",letterSpacing:1,textAlign:"center"}}>
+              ↺ RESET
+            </button>
+          </div>
           <div style={{width:36,height:36,background:`${color}18`,border:`1px solid ${color}44`,borderRadius:5,
                        display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>
             {isCustom?<UserLogo size={28} color={color}/>:(ac.icon||"✈")}
@@ -1003,19 +1025,14 @@ function ChecklistScreen({aircraftId,onBack,settings,customLists}){
             <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
               <div style={{fontSize:16,fontWeight:"bold",letterSpacing:1.5,color:text}}>{name}</div>
               {reg&&<div style={{fontSize:11,padding:"2px 7px",background:`${color}22`,border:`1px solid ${color}44`,borderRadius:3,color,letterSpacing:1}}>{reg}</div>}
-              {!isCustom&&ac.speedTable&&(
-                <button onClick={()=>setShowSpeeds(true)}
-                  style={{background:`${color}18`,border:`1px solid ${color}66`,color:color,
-                          fontSize:11,padding:"3px 10px",borderRadius:4,cursor:"pointer",letterSpacing:1,flexShrink:0,fontFamily:"Courier New"}}>
-                  ✈ SPEEDS
-                </button>
-              )}
-              <button onClick={()=>{setChecked({});setCompleting({});}}
-                style={{background:"transparent",border:`1px solid ${color}66`,color:color,
-                        fontSize:11,padding:"3px 10px",borderRadius:4,cursor:"pointer",letterSpacing:1,flexShrink:0}}>
-                ↺ RESET ALL
-              </button>
             </div>
+            {!isCustom&&ac.speedTable&&(
+              <button onClick={()=>setShowSpeeds(true)}
+                style={{marginTop:6,background:`${color}18`,border:`1px solid ${color}66`,color:color,
+                        fontSize:13,padding:"6px 16px",borderRadius:5,cursor:"pointer",letterSpacing:1,flexShrink:0}}>
+                ✈ SPEEDS
+              </button>
+            )}
           </div>
           <div style={{textAlign:"right",flexShrink:0}}>
             <div style={{fontSize:11,color:textDim,letterSpacing:2}}>{t.phase}</div>
@@ -1070,25 +1087,26 @@ function ChecklistScreen({aircraftId,onBack,settings,customLists}){
           const done = !!checked[key];
           const isWarn = it.startsWith("⚠");
           const isCompleting = !!completing[key];
+          const isConfirmed = !!confirmed[key];
           return (
             <div key={i} onClick={()=>toggle(activePhase,i)}
                  style={{display:"flex",alignItems:"flex-start",gap:12,padding:"12px 14px",
                          marginBottom:6,borderRadius:5,cursor:isWarn?"default":"pointer",
-                         background:done?"#00ff8808":isCompleting?`${accent}18`:"transparent",
-                         border:`1px solid ${done?"#4CAF5022":isWarn?"#FF174422":border}`,
-                         transition:"all 0.2s",animation:isCompleting?"fadeIn 0.3s ease":undefined}}>
+                         background:isConfirmed?"#00ff8808":isCompleting?`${accent}10`:"transparent",
+                         border:`1px solid ${isConfirmed?"#4CAF5022":isWarn?"#FF174422":border}`,
+                         transition:"all 0.3s"}}>
               {!isWarn&&(
-                <div style={{width:22,height:22,border:`2px solid ${done?"#4CAF50":accent+"66"}`,borderRadius:4,
-                             flexShrink:0,background:done?"#4CAF50":"transparent",
-                             display:"flex",alignItems:"center",justifyContent:"center",transition:"all 0.2s",marginTop:1}}>
-                  {done&&<span style={{color:"#000",fontSize:13,fontWeight:"bold",lineHeight:1}}>✓</span>}
+                <div style={{width:22,height:22,border:`2px solid ${(done||isCompleting)?"#4CAF50":accent+"66"}`,borderRadius:4,
+                             flexShrink:0,background:(done||isCompleting)?"#4CAF50":"transparent",
+                             display:"flex",alignItems:"center",justifyContent:"center",transition:"all 0.15s",marginTop:1}}>
+                  {(done||isCompleting)&&<span style={{color:"#000",fontSize:13,fontWeight:"bold",lineHeight:1}}>✓</span>}
                 </div>
               )}
               {!isWarn&&<span style={{fontSize:12,color:textDim,width:22,flexShrink:0,letterSpacing:1,paddingTop:3,marginTop:1}}>{String(i+1).padStart(2,"0")}</span>}
               <span style={{fontSize:isWarn?14:15,letterSpacing:0.3,
-                            color:done?"#4CAF50":isWarn?"#FF5252":text,
-                            textDecoration:done?"line-through":"none",
-                            transition:"all 0.25s",flex:1,lineHeight:1.6}}>
+                            color:isConfirmed?"#4CAF50":isWarn?"#FF5252":text,
+                            textDecoration:isConfirmed?"line-through":"none",
+                            transition:"all 0.3s",flex:1,lineHeight:1.6}}>
                 {it}
               </span>
             </div>
