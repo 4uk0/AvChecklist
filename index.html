@@ -1277,10 +1277,15 @@ function CustomChecklistScreen({checklistId,onBack,settings,customLists}){
 
 // ── APP ────────────────────────────────────────────────────────────────────
 function App(){
+  // ── DEMO MODE: ?demo=<aircraft-id> boots directly into one checklist ──
+  const demoId = new URLSearchParams(window.location.search).get('demo');
+  const demoValid = demoId && AIRCRAFT[demoId];
+  const demoClub = demoValid ? AIRCRAFT[demoId].category : null;
+
   const [settings,setSettings] = useState({whiteMode:true,milGreen:false,autoAdvance:true,floatDone:true,lang:"en"});
-  const [view,setView] = useState("clubs"); // clubs | club | checklist | custom
-  const [selectedClub,setSelectedClub] = useState(null);
-  const [selectedAc,setSelectedAc] = useState(null);
+  const [view,setView] = useState(demoValid ? "checklist" : "clubs"); // clubs | club | checklist | custom
+  const [selectedClub,setSelectedClub] = useState(demoClub);
+  const [selectedAc,setSelectedAc] = useState(demoValid ? demoId : null);
   const [customLists,setCustomLists] = useState([]);
 
   // Apply body class for theme
